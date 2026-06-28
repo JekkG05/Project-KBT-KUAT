@@ -1,5 +1,6 @@
 from flask import Flask
 
+
 def create_app():
 
     app = Flask(
@@ -8,12 +9,25 @@ def create_app():
         static_folder="static"
     )
 
-    # config
     app.config.from_object("app.config.Config")
 
 
-from app.controllers.main_controller import routes
-app.register_blueprint(routes)
+    from app.controllers import (
+        home_bp,
+        auth_bp,
+        account_bp,
+        exercise_bp,
+        routine_bp,
+        train_bp
+    )
+
+
+    app.register_blueprint(home_bp)
+    app.register_blueprint(auth_bp)
+    app.register_blueprint(account_bp)
+    app.register_blueprint(exercise_bp)
+    app.register_blueprint(routine_bp)
+    app.register_blueprint(train_bp)
 
 
     return app
