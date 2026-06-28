@@ -103,7 +103,7 @@ def train_session(plan_id):
             plan_id
         )
         .order(
-            "id"
+            "item_order"
         )
         .execute()
     )
