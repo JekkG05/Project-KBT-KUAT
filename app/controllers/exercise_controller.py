@@ -415,6 +415,23 @@ def delete_item(item_id):
     )
 
 
+    # Lepas dulu relasi di workout_logs yang menunjuk ke item ini,
+    # agar tidak melanggar foreign key constraint. Baris log-nya
+    # sendiri TIDAK dihapus (riwayat latihan tetap tersimpan),
+    # cuma referensi ke item-nya yang dikosongkan.
+    supabase.table(
+        "workout_logs"
+    ).update(
+        {
+            "plan_item_id": None
+        }
+    ) \
+    .eq(
+        "plan_item_id",
+        item_id
+    ).execute()
+
+
     supabase.table(
         "workout_plan_items"
     ).delete() \
@@ -452,6 +469,29 @@ def delete_plan(plan_id):
     )
 
 
+    # Hapus dulu workout_logs yang masih menunjuk ke plan ini,
+    # supaya tidak melanggar foreign key constraint saat
+    # workout_plan_items / workout_plans dihapus di bawah.
+    supabase.table(
+        "workout_logs"
+    ).delete() \
+    .eq(
+        "plan_id",
+        plan_id
+    ).execute()
+
+
+    # Baru hapus item-item exercise di routine ini.
+    supabase.table(
+        "workout_plan_items"
+    ).delete() \
+    .eq(
+        "plan_id",
+        plan_id
+    ).execute()
+
+
+    # Terakhir, hapus plan-nya sendiri.
     supabase.table(
         "workout_plans"
     ).delete() \
@@ -459,7 +499,6 @@ def delete_plan(plan_id):
         "id",
         plan_id
     ).execute()
-
 
 
     flash(
