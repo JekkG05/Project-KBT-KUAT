@@ -1,5 +1,8 @@
 from flask_login import UserMixin
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import (
+    generate_password_hash,
+    check_password_hash
+)
 
 
 
@@ -7,13 +10,22 @@ class User(UserMixin):
 
     def __init__(self, data):
 
-        self.id = data.get("id")
-
-        self.email = data.get("email")
-
-        self.password_hash = data.get(
-            "password_hash"
+        self.id = data.get(
+            "id"
         )
+
+
+        self.email = data.get(
+            "email"
+        )
+
+
+        # sesuai database signup:
+        # "password": password_hash
+        self.password_hash = data.get(
+            "password"
+        )
+
 
         self.name = data.get(
             "name"
@@ -24,13 +36,16 @@ class User(UserMixin):
             "gender"
         )
 
+
         self.usia = data.get(
             "usia"
         )
 
+
         self.bb = data.get(
             "bb"
         )
+
 
         self.tinggi = data.get(
             "tinggi"
@@ -40,6 +55,7 @@ class User(UserMixin):
         self.experience_level = data.get(
             "experience_level"
         )
+
 
         self.injury_history = data.get(
             "injury_history"
@@ -51,10 +67,12 @@ class User(UserMixin):
             0
         )
 
+
         self.initial_sq = data.get(
             "initial_sq",
             0
         )
+
 
         self.initial_bp = data.get(
             "initial_bp",
@@ -76,13 +94,19 @@ class User(UserMixin):
 
     def set_password(self, raw_password):
 
-        self.password_hash = generate_password_hash(
-            raw_password
+        self.password_hash = (
+            generate_password_hash(
+                raw_password
+            )
         )
 
 
 
     def check_password(self, raw_password):
+
+        if not self.password_hash:
+            return False
+
 
         return check_password_hash(
             self.password_hash,
@@ -94,6 +118,14 @@ class User(UserMixin):
     def is_premium(self):
 
         return self.tier == "premium"
+
+
+
+    def get_id(self):
+
+        return str(
+            self.id
+        )
 
 
 
