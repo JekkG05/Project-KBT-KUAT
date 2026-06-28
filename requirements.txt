@@ -1,7 +1,10 @@
-flask==3.0.0
-flask-login==0.6.3
-flask-sqlalchemy==3.1.1
-supabase==2.4.0
-python-dotenv==1.0.1
-psycopg2-binary==2.9.9
-werkzeug==3.0.1
+Flask
+Flask-Login
+Flask-SQLAlchemy
+Werkzeug
+
+supabase==2.15.0
+httpx==0.27.2
+
+python-dotenv
+gunicorn
