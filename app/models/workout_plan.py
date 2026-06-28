@@ -1,5 +1,7 @@
 from datetime import datetime
 
+from app.models._datetime_utils import parse_dt
+
 
 
 class WorkoutPlan:
@@ -32,15 +34,13 @@ class WorkoutPlan:
         )
 
 
-        self.created_at = data.get(
-            "created_at",
-            datetime.utcnow()
+        self.created_at = parse_dt(
+            data.get("created_at")
         )
 
 
-        self.updated_at = data.get(
-            "updated_at",
-            datetime.utcnow()
+        self.updated_at = parse_dt(
+            data.get("updated_at")
         )
 
 
