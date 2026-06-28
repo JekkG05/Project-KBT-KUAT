@@ -1,32 +1,115 @@
 from datetime import datetime
 
-from app import db
 
 
-class WorkoutLog(db.Model):
-    __tablename__ = "workout_logs"
+class WorkoutLog:
 
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    plan_id = db.Column(db.Integer, db.ForeignKey("workout_plans.id"), nullable=True)
-    plan_item_id = db.Column(db.Integer, db.ForeignKey("workout_plan_items.id"), nullable=True)
 
-    nama_gerakan = db.Column(db.String(150), nullable=False)
-    cluster = db.Column(db.String(1), nullable=False, default="B")
+    def __init__(self, data):
 
-    beban_aktual = db.Column(db.Float, nullable=False)
-    reps_aktual = db.Column(db.Integer, nullable=False)
-    rir_input = db.Column(db.Integer, nullable=False)
-    rpe_converted = db.Column(db.Float, nullable=False)
+        self.id = data.get(
+            "id"
+        )
 
-    volume = db.Column(db.Float, nullable=False, default=0)
-    estimated_1rm = db.Column(db.Float, nullable=False, default=0)
-    fatigue_total = db.Column(db.Float, nullable=False, default=0)
-    cns_fatigue = db.Column(db.Float, nullable=False, default=0)
-    acwr = db.Column(db.Float, nullable=False, default=1.0)
-    fsm_state = db.Column(db.String(20), nullable=False, default="SEGAR")
 
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+        self.user_id = data.get(
+            "user_id"
+        )
+
+
+        self.plan_id = data.get(
+            "plan_id"
+        )
+
+
+        self.plan_item_id = data.get(
+            "plan_item_id"
+        )
+
+
+        self.nama_gerakan = data.get(
+            "nama_gerakan"
+        )
+
+
+        self.cluster = data.get(
+            "cluster",
+            "B"
+        )
+
+
+        self.beban_aktual = data.get(
+            "beban_aktual",
+            0
+        )
+
+
+        self.reps_aktual = data.get(
+            "reps_aktual",
+            0
+        )
+
+
+        self.rir_input = data.get(
+            "rir_input",
+            0
+        )
+
+
+        self.rpe_converted = data.get(
+            "rpe_converted",
+            0
+        )
+
+
+        self.volume = data.get(
+            "volume",
+            0
+        )
+
+
+        self.estimated_1rm = data.get(
+            "estimated_1rm",
+            0
+        )
+
+
+        self.fatigue_total = data.get(
+            "fatigue_total",
+            0
+        )
+
+
+        self.cns_fatigue = data.get(
+            "cns_fatigue",
+            0
+        )
+
+
+        self.acwr = data.get(
+            "acwr",
+            1.0
+        )
+
+
+        self.fsm_state = data.get(
+            "fsm_state",
+            "SEGAR"
+        )
+
+
+        self.created_at = data.get(
+            "created_at",
+            datetime.utcnow()
+        )
+
+
 
     def __repr__(self):
-        return f"<WorkoutLog {self.nama_gerakan} {self.beban_aktual}x{self.reps_aktual}>"
+
+        return (
+            f"<WorkoutLog "
+            f"{self.nama_gerakan} "
+            f"{self.beban_aktual}x"
+            f"{self.reps_aktual}>"
+        )
