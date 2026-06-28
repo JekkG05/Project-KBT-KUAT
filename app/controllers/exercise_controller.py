@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash,
 from flask_login import login_required, current_user
 
 from app.config import supabase
+from app.models.workout_plan import WorkoutPlan
 
 
 exercise_bp = Blueprint(
@@ -16,7 +17,7 @@ def _get_owned_plan_or_404(plan_id):
 
     result = (
         supabase
-        .table("workout_plan")
+        .table("workout_plans")
         .select("*")
         .eq("id", plan_id)
         .eq("user_id", current_user.id)
@@ -38,7 +39,7 @@ def _get_owned_item_or_404(item_id):
 
     result = (
         supabase
-        .table("workout_plan_item")
+        .table("workout_plan_items")
         .select("*")
         .eq("id", item_id)
         .single()
@@ -71,7 +72,7 @@ def index():
 
     plans_result = (
         supabase
-        .table("workout_plan")
+        .table("workout_plans")
         .select("*")
         .eq(
             "user_id",
@@ -85,7 +86,7 @@ def index():
     )
 
 
-    plans = plans_result.data or []
+    plans = [WorkoutPlan(row) for row in (plans_result.data or [])]
 
 
 
@@ -117,7 +118,7 @@ def index():
 
         for p in plans:
 
-            if p["id"] == active_plan_id:
+            if p.id == active_plan_id:
 
                 active_plan = p
                 break
@@ -128,6 +129,20 @@ def index():
 
         active_plan = plans[0]
 
+
+
+    if active_plan is not None:
+
+        items_result = (
+            supabase
+            .table("workout_plan_items")
+            .select("*")
+            .eq("plan_id", active_plan.id)
+            .order("id")
+            .execute()
+        )
+
+        active_plan.items = items_result.data or []
 
 
     return render_template(
@@ -180,7 +195,7 @@ def create_plan():
 
     result = (
         supabase
-        .table("workout_plan")
+        .table("workout_plans")
         .insert(
             {
                 "user_id": current_user.id,
@@ -283,7 +298,7 @@ def add_item(plan_id):
 
 
     supabase.table(
-        "workout_plan_item"
+        "workout_plan_items"
     ).insert(
         {
 
@@ -338,7 +353,7 @@ def delete_item(item_id):
 
 
     supabase.table(
-        "workout_plan_item"
+        "workout_plan_items"
     ).delete() \
     .eq(
         "id",
@@ -375,7 +390,7 @@ def delete_plan(plan_id):
 
 
     supabase.table(
-        "workout_plan"
+        "workout_plans"
     ).delete() \
     .eq(
         "id",
