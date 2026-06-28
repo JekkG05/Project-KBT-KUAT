@@ -1,34 +1,23 @@
 from flask_login import UserMixin
-from werkzeug.security import (
-    generate_password_hash,
-    check_password_hash
-)
-
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 class User(UserMixin):
 
     def __init__(self, data):
 
-        self.id = data.get(
-            "id"
-        )
+        self.id = data.get("id")
 
+        self.email = data.get("email")
 
-        self.email = data.get(
-            "email"
-        )
-
-
-        # sesuai database signup:
-        # "password": password_hash
         self.password_hash = data.get(
-            "password"
+            "password",
+            ""
         )
-
 
         self.name = data.get(
-            "name"
+            "name",
+            ""
         )
 
 
@@ -36,29 +25,31 @@ class User(UserMixin):
             "gender"
         )
 
-
         self.usia = data.get(
-            "usia"
+            "usia",
+            0
         )
-
 
         self.bb = data.get(
-            "bb"
+            "bb",
+            0
         )
 
-
         self.tinggi = data.get(
-            "tinggi"
+            "tinggi",
+            0
         )
 
 
         self.experience_level = data.get(
-            "experience_level"
+            "experience_level",
+            ""
         )
 
 
         self.injury_history = data.get(
-            "injury_history"
+            "injury_history",
+            ""
         )
 
 
@@ -67,12 +58,10 @@ class User(UserMixin):
             0
         )
 
-
         self.initial_sq = data.get(
             "initial_sq",
             0
         )
-
 
         self.initial_bp = data.get(
             "initial_bp",
@@ -92,25 +81,19 @@ class User(UserMixin):
 
 
 
-    def set_password(self, raw_password):
+    def set_password(self, password):
 
-        self.password_hash = (
-            generate_password_hash(
-                raw_password
-            )
+        self.password_hash = generate_password_hash(
+            password
         )
 
 
 
-    def check_password(self, raw_password):
-
-        if not self.password_hash:
-            return False
-
+    def check_password(self, password):
 
         return check_password_hash(
             self.password_hash,
-            raw_password
+            password
         )
 
 
@@ -121,18 +104,6 @@ class User(UserMixin):
 
 
 
-    def get_id(self):
-
-        return str(
-            self.id
-        )
-
-
-
     def __repr__(self):
 
-        return (
-            f"<User "
-            f"{self.email} "
-            f"({self.tier})>"
-        )
+        return f"<User {self.email}>"
