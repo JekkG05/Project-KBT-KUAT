@@ -16,7 +16,6 @@ from app.models.user import User
 auth_bp = Blueprint("auth", __name__)
 
 
-
 @auth_bp.route("/login", methods=["GET", "POST"])
 def login():
 
@@ -27,14 +26,11 @@ def login():
     if request.method == "POST":
 
         email = (
-            request.form.get("email")
-            or ""
+            request.form.get("email") or ""
         ).strip().lower()
 
-
         password = (
-            request.form.get("password")
-            or ""
+            request.form.get("password") or ""
         )
 
 
@@ -45,33 +41,44 @@ def login():
                 "danger"
             )
 
-            return redirect(
-                url_for("auth.login")
+            return redirect(url_for("auth.login"))
+
+
+        try:
+
+            result = (
+                supabase
+                .table("users")
+                .select("*")
+                .eq("email", email)
+                .single()
+                .execute()
             )
 
 
-
-        result = (
-            supabase
-            .table("users")
-            .select("*")
-            .eq("email", email)
-            .single()
-            .execute()
-        )
+            user_data = result.data
 
 
-        user_data = result.data
+        except Exception:
+
+            flash(
+                "Email atau password salah.",
+                "danger"
+            )
+
+            return redirect(url_for("auth.login"))
 
 
 
         if user_data and check_password_hash(
-            user_data["password"],
+            user_data["password_hash"],
             password
         ):
 
 
-            user = User(user_data)
+            user = User(
+                **user_data
+            )
 
 
             login_user(user)
@@ -86,7 +93,6 @@ def login():
             return redirect(
                 url_for("home.index")
             )
-
 
 
         flash(
@@ -107,8 +113,9 @@ def login():
 
 
 
+
 @auth_bp.route("/signup", methods=["GET", "POST"])
-def signup():
+def signup:
 
 
     if current_user.is_authenticated:
@@ -126,32 +133,40 @@ def signup():
 
 
         name = (
-            form.get("name")
-            or ""
+            form.get("name") or ""
         ).strip()
 
 
         email = (
-            form.get("email")
-            or ""
+            form.get("email") or ""
         ).strip().lower()
 
 
         password = (
-            form.get("password")
-            or ""
+            form.get("password") or ""
         )
 
+
         confirm_password = (
-            form.get("confirm_password")
-            or ""
+            form.get("confirm_password") or ""
         )
+
+
+        if password != confirm_password:
+
+            flash(
+                "Konfirmasi password tidak sama.",
+                "danger"
+            )
+
+            return redirect(
+                url_for("auth.signup")
+            )
 
 
 
         gender = (
-            form.get("gender")
-            or ""
+            form.get("gender") or ""
         ).upper()
 
 
@@ -159,15 +174,11 @@ def signup():
         try:
 
             usia = int(form.get("usia"))
-
             bb = float(form.get("bb"))
-
             tinggi = float(form.get("tinggi"))
 
             initial_dl = float(form.get("initial_dl"))
-
             initial_sq = float(form.get("initial_sq"))
-
             initial_bp = float(form.get("initial_bp"))
 
 
@@ -185,22 +196,18 @@ def signup():
 
 
         experience_level = (
-            form.get("experience_level")
-            or ""
+            form.get("experience_level") or ""
         ).lower()
 
 
-
         injury_history = (
-            form.get("injury_history")
-            or ""
+            form.get("injury_history") or ""
         )
 
 
 
         tier = (
-            form.get("tier")
-            or "free"
+            form.get("tier") or "free"
         )
 
 
@@ -214,8 +221,8 @@ def signup():
         )
 
 
-
         if existing.data:
+
 
             flash(
                 "Email sudah terdaftar.",
@@ -245,7 +252,7 @@ def signup():
 
                     "email": email,
 
-                    "password": password_hash,
+                    "password_hash": password_hash,
 
                     "gender": gender,
 
@@ -268,7 +275,6 @@ def signup():
                     "tier": tier
 
                 }
-
             )
             .execute()
 
@@ -277,7 +283,6 @@ def signup():
 
 
         user_id = new_user.data[0]["id"]
-
 
 
 
@@ -294,7 +299,7 @@ def signup():
 
 
         supabase.table(
-            "engine_state"
+            "engine_states"
         ).insert(
             {
 
@@ -308,8 +313,9 @@ def signup():
 
 
 
+
         user = User(
-            new_user.data[0]
+            **new_user.data[0]
         )
 
 
@@ -340,6 +346,7 @@ def signup():
 @auth_bp.route("/logout")
 @login_required
 def logout():
+
 
     logout_user()
 
