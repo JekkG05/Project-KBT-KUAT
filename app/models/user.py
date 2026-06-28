@@ -4,20 +4,29 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 class User(UserMixin):
 
-    def __init__(self, data):
+    def __init__(self, data=None, **kwargs):
+
+        if data is None:
+            data = {}
+
+        if kwargs:
+            data.update(kwargs)
+
 
         self.id = data.get("id")
 
         self.email = data.get("email")
 
+        # database kamu pakai kolom password
         self.password_hash = data.get(
-            "password",
-            ""
+            "password"
+        ) or data.get(
+            "password_hash"
         )
 
+
         self.name = data.get(
-            "name",
-            ""
+            "name"
         )
 
 
@@ -25,31 +34,29 @@ class User(UserMixin):
             "gender"
         )
 
+
         self.usia = data.get(
-            "usia",
-            0
+            "usia"
         )
+
 
         self.bb = data.get(
-            "bb",
-            0
+            "bb"
         )
 
+
         self.tinggi = data.get(
-            "tinggi",
-            0
+            "tinggi"
         )
 
 
         self.experience_level = data.get(
-            "experience_level",
-            ""
+            "experience_level"
         )
 
 
         self.injury_history = data.get(
-            "injury_history",
-            ""
+            "injury_history"
         )
 
 
@@ -58,10 +65,12 @@ class User(UserMixin):
             0
         )
 
+
         self.initial_sq = data.get(
             "initial_sq",
             0
         )
+
 
         self.initial_bp = data.get(
             "initial_bp",
@@ -106,4 +115,6 @@ class User(UserMixin):
 
     def __repr__(self):
 
-        return f"<User {self.email}>"
+        return (
+            f"<User {self.email} ({self.tier})>"
+        )
