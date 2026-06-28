@@ -1,141 +1,355 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from flask_login import login_user, logout_user, login_required, current_user
+from flask_login import (
+    login_user,
+    logout_user,
+    login_required,
+    current_user
+)
 
-from app import db
-from app.models.user import User
-from app.models.engine_state import EngineState
+from werkzeug.security import generate_password_hash, check_password_hash
+
+from app.config import supabase
 from app.services.kuat_engine import KuatTracker
+from app.models.user import User
+
 
 auth_bp = Blueprint("auth", __name__)
 
 
+
 @auth_bp.route("/login", methods=["GET", "POST"])
 def login():
+
     if current_user.is_authenticated:
         return redirect(url_for("home.index"))
 
+
     if request.method == "POST":
-        email = (request.form.get("email") or "").strip().lower()
-        password = request.form.get("password") or ""
+
+        email = (
+            request.form.get("email")
+            or ""
+        ).strip().lower()
+
+
+        password = (
+            request.form.get("password")
+            or ""
+        )
+
 
         if not email or not password:
-            flash("Email dan password wajib diisi.", "danger")
-            return redirect(url_for("auth.login"))
 
-        user = User.query.filter_by(email=email).first()
-        if user and user.check_password(password):
+            flash(
+                "Email dan password wajib diisi.",
+                "danger"
+            )
+
+            return redirect(
+                url_for("auth.login")
+            )
+
+
+
+        result = (
+            supabase
+            .table("users")
+            .select("*")
+            .eq("email", email)
+            .single()
+            .execute()
+        )
+
+
+        user_data = result.data
+
+
+
+        if user_data and check_password_hash(
+            user_data["password"],
+            password
+        ):
+
+
+            user = User(user_data)
+
+
             login_user(user)
-            flash(f"Selamat datang kembali, {user.name}!", "success")
-            return redirect(url_for("home.index"))
 
-        flash("Email atau password salah.", "danger")
-        return redirect(url_for("auth.login"))
 
-    return render_template("auth/login.html")
+            flash(
+                f"Selamat datang kembali, {user.name}!",
+                "success"
+            )
+
+
+            return redirect(
+                url_for("home.index")
+            )
+
+
+
+        flash(
+            "Email atau password salah.",
+            "danger"
+        )
+
+
+        return redirect(
+            url_for("auth.login")
+        )
+
+
+    return render_template(
+        "auth/login.html"
+    )
+
+
 
 
 @auth_bp.route("/signup", methods=["GET", "POST"])
 def signup():
+
+
     if current_user.is_authenticated:
-        return redirect(url_for("home.index"))
+
+        return redirect(
+            url_for("home.index")
+        )
+
+
 
     if request.method == "POST":
+
+
         form = request.form
 
-        # --- Step 1: Akun ---
-        name = (form.get("name") or "").strip()
-        email = (form.get("email") or "").strip().lower()
-        password = form.get("password") or ""
-        confirm_password = form.get("confirm_password") or ""
 
-        # --- Step 2: Data diri ---
-        gender = (form.get("gender") or "").strip().upper()
-        usia = form.get("usia")
-        bb = form.get("bb")
-        tinggi = form.get("tinggi")
-        experience_level = (form.get("experience_level") or "").strip().lower()
-        injury_history = (form.get("injury_history") or "").strip()
+        name = (
+            form.get("name")
+            or ""
+        ).strip()
 
-        # --- Step 3: Target + tier ---
-        initial_dl = form.get("initial_dl")
-        initial_sq = form.get("initial_sq")
-        initial_bp = form.get("initial_bp")
-        tier_choice = (form.get("tier") or "free").strip().lower()
 
-        # --- Validasi dasar ---
-        errors = []
+        email = (
+            form.get("email")
+            or ""
+        ).strip().lower()
 
-        if not name or not email or not password or not confirm_password:
-            errors.append("Semua field akun wajib diisi.")
-        if password and len(password) < 6:
-            errors.append("Password minimal 6 karakter.")
-        if password != confirm_password:
-            errors.append("Password dan konfirmasi password tidak sama.")
-        if gender not in ("L", "P"):
-            errors.append("Gender hanya boleh L atau P.")
-        if experience_level not in ("novice", "intermediate", "advanced"):
-            errors.append("Experience level tidak valid.")
-        if tier_choice not in ("free", "premium"):
-            errors.append("Tier hanya boleh free atau premium.")
+
+        password = (
+            form.get("password")
+            or ""
+        )
+
+        confirm_password = (
+            form.get("confirm_password")
+            or ""
+        )
+
+
+
+        gender = (
+            form.get("gender")
+            or ""
+        ).upper()
+
+
 
         try:
-            usia_val = int(usia)
-            bb_val = float(bb)
-            tinggi_val = float(tinggi) if tinggi else None
-            initial_dl_val = float(initial_dl)
-            initial_sq_val = float(initial_sq)
-            initial_bp_val = float(initial_bp)
-        except (TypeError, ValueError):
-            errors.append("Pastikan usia, berat badan, tinggi, dan target angkatan berupa angka.")
-            usia_val = bb_val = tinggi_val = initial_dl_val = initial_sq_val = initial_bp_val = None
 
-        if email and User.query.filter_by(email=email).first():
-            errors.append("Email sudah terdaftar. Silakan login.")
+            usia = int(form.get("usia"))
 
-        if errors:
-            for e in errors:
-                flash(e, "danger")
-            return redirect(url_for("auth.signup"))
+            bb = float(form.get("bb"))
 
-        new_user = User(
-            email=email,
-            name=name,
-            gender=gender,
-            usia=usia_val,
-            bb=bb_val,
-            tinggi=tinggi_val,
-            experience_level=experience_level,
-            injury_history=injury_history or None,
-            initial_dl=initial_dl_val,
-            initial_sq=initial_sq_val,
-            initial_bp=initial_bp_val,
-            tier=tier_choice,
+            tinggi = float(form.get("tinggi"))
+
+            initial_dl = float(form.get("initial_dl"))
+
+            initial_sq = float(form.get("initial_sq"))
+
+            initial_bp = float(form.get("initial_bp"))
+
+
+        except:
+
+            flash(
+                "Data angka tidak valid.",
+                "danger"
+            )
+
+            return redirect(
+                url_for("auth.signup")
+            )
+
+
+
+        experience_level = (
+            form.get("experience_level")
+            or ""
+        ).lower()
+
+
+
+        injury_history = (
+            form.get("injury_history")
+            or ""
         )
-        new_user.set_password(password)
 
-        db.session.add(new_user)
-        db.session.commit()
 
-        # Buat EngineState awal dari KuatTracker
+
+        tier = (
+            form.get("tier")
+            or "free"
+        )
+
+
+
+        existing = (
+            supabase
+            .table("users")
+            .select("id")
+            .eq("email", email)
+            .execute()
+        )
+
+
+
+        if existing.data:
+
+            flash(
+                "Email sudah terdaftar.",
+                "danger"
+            )
+
+            return redirect(
+                url_for("auth.signup")
+            )
+
+
+
+        password_hash = generate_password_hash(
+            password
+        )
+
+
+
+        new_user = (
+
+            supabase
+            .table("users")
+            .insert(
+                {
+
+                    "name": name,
+
+                    "email": email,
+
+                    "password": password_hash,
+
+                    "gender": gender,
+
+                    "usia": usia,
+
+                    "bb": bb,
+
+                    "tinggi": tinggi,
+
+                    "experience_level": experience_level,
+
+                    "injury_history": injury_history,
+
+                    "initial_dl": initial_dl,
+
+                    "initial_sq": initial_sq,
+
+                    "initial_bp": initial_bp,
+
+                    "tier": tier
+
+                }
+
+            )
+            .execute()
+
+        )
+
+
+
+        user_id = new_user.data[0]["id"]
+
+
+
+
         tracker = KuatTracker(
-            initial_dl=new_user.initial_dl,
-            initial_sq=new_user.initial_sq,
-            initial_bp=new_user.initial_bp,
+
+            initial_dl=initial_dl,
+
+            initial_sq=initial_sq,
+
+            initial_bp=initial_bp
+
         )
-        engine_state = EngineState(user_id=new_user.id, state_json=tracker.to_dict())
-        db.session.add(engine_state)
-        db.session.commit()
 
-        login_user(new_user)
-        flash(f"Akun berhasil dibuat. Selamat datang, {new_user.name}!", "success")
-        return redirect(url_for("home.index"))
 
-    return render_template("auth/signup.html")
+
+        supabase.table(
+            "engine_state"
+        ).insert(
+            {
+
+                "user_id": user_id,
+
+                "state_json": tracker.to_dict()
+
+            }
+
+        ).execute()
+
+
+
+        user = User(
+            new_user.data[0]
+        )
+
+
+        login_user(user)
+
+
+
+        flash(
+            f"Akun berhasil dibuat. Selamat datang, {name}!",
+            "success"
+        )
+
+
+        return redirect(
+            url_for("home.index")
+        )
+
+
+
+    return render_template(
+        "auth/signup.html"
+    )
+
+
+
 
 
 @auth_bp.route("/logout")
 @login_required
 def logout():
+
     logout_user()
-    flash("Anda telah logout.", "success")
-    return redirect(url_for("auth.login"))
+
+
+    flash(
+        "Anda telah logout.",
+        "success"
+    )
+
+
+    return redirect(
+        url_for("auth.login")
+    )
