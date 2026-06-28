@@ -22,7 +22,7 @@ def train_landing():
 
     result = (
         supabase
-        .table("workout_plan")
+        .table("workout_plans")
         .select("*")
         .eq(
             "user_id",
@@ -70,7 +70,7 @@ def train_session(plan_id):
 
     plan_result = (
         supabase
-        .table("workout_plan")
+        .table("workout_plans")
         .select("*")
         .eq(
             "id",
@@ -96,7 +96,7 @@ def train_session(plan_id):
 
     items_result = (
         supabase
-        .table("workout_plan_item")
+        .table("workout_plan_items")
         .select("*")
         .eq(
             "plan_id",
@@ -216,7 +216,7 @@ def log_set():
 
     plan_check = (
         supabase
-        .table("workout_plan")
+        .table("workout_plans")
         .select("*")
         .eq("id",plan_id)
         .eq("user_id",current_user.id)
