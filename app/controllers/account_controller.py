@@ -17,7 +17,7 @@ def index():
 
     workout_result = (
         supabase
-        .table("workout_log")
+        .table("workout_logs")
         .select("*")
         .eq(
             "user_id",
