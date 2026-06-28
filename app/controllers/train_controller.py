@@ -115,7 +115,7 @@ def train_session(plan_id):
 
     state_result = (
         supabase
-        .table("engine_state")
+        .table("engine_states")
         .select("*")
         .eq(
             "user_id",
@@ -240,7 +240,7 @@ def log_set():
 
     state_result = (
         supabase
-        .table("engine_state")
+        .table("engine_states")
         .select("*")
         .eq(
             "user_id",
@@ -266,7 +266,7 @@ def log_set():
 
 
         supabase.table(
-            "engine_state"
+            "engine_states"
         ).insert(
             {
 
@@ -302,7 +302,7 @@ def log_set():
 
     logs_result = (
         supabase
-        .table("workout_log")
+        .table("workout_logs")
         .select("*")
         .eq(
             "user_id",
@@ -363,7 +363,7 @@ def log_set():
 
 
     supabase.table(
-        "workout_log"
+        "workout_logs"
     ).insert(
         {
 
@@ -406,7 +406,7 @@ def log_set():
 
 
     supabase.table(
-        "engine_state"
+        "engine_states"
     ).update(
         {
             "state_json":tracker.to_dict()
