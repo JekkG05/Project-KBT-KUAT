@@ -1,17 +1,13 @@
-import os
 from supabase import create_client
+import os
 
 
-class Config:
+SUPABASE_URL = "https://eljxtoaeurxbdcisklcu.supabase.co"
 
-    SECRET_KEY = os.getenv("SECRET_KEY")
-
-    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL")
-
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
+SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 
 
 supabase = create_client(
-    os.getenv("SUPABASE_URL"),
-    os.getenv("SUPABASE_KEY")
+    SUPABASE_URL,
+    SUPABASE_KEY
 )
