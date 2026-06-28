@@ -30,7 +30,7 @@ def index():
             .table("workout_plan_items")
             .select("*")
             .in_("plan_id", plan_ids)
-            .order("id")
+            .order("item_order")
             .execute()
         )
         for item in (items_result.data or []):
