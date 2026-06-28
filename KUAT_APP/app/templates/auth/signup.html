@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Signup · KUAT.{% endblock %}
+{% block body_class %}auth-page{% endblock %}
+{% block content %}
+<section class="auth-shell">
+    <div class="auth-card signup-card">
+        <div class="brand-lockup small">
+            <span class="mark big"><i></i><i></i><i></i></span>
+            <h1>KUAT.</h1>
+        </div>
+        <h2>SIGN UP</h2>
+        <div class="stepper" data-stepper>
+            <div class="stepper-head">
+                <button type="button" class="step-dot active" data-step-target="0">Akun</button>
+                <button type="button" class="step-dot" data-step-target="1">Kondisi</button>
+                <button type="button" class="step-dot" data-step-target="2">Target</button>
+            </div>
+            <form method="post" class="form-stack stepper-form">
+                <section class="step-panel active" data-step="0">
+                    <input name="first_name" placeholder="First Name" required>
+                    <input name="last_name" placeholder="Last Name" required>
+                    <input type="email" name="email" placeholder="Email" required>
+                    <input type="password" name="password" placeholder="Password" required>
+                    <input type="password" name="password_confirm" placeholder="Confirm Password" required>
+                    <button type="button" class="pill-btn next-step">NEXT</button>
+                </section>
+                <section class="step-panel" data-step="1">
+                    <input type="number" name="usia" min="10" max="90" placeholder="Usia" required>
+                    <input type="number" step="0.1" name="bb" min="20" placeholder="Bodyweight / BB (kg)" required>
+                    <input type="number" step="0.1" name="tinggi" min="100" placeholder="Height / Tinggi (cm)">
+                    <input type="number" name="bpm_base" min="35" max="120" placeholder="BPM istirahat pagi baseline" required>
+                    <select name="experience_level" required>
+                        <option value="novice">Novice</option>
+                        <option value="intermediate" selected>Intermediate</option>
+                        <option value="advanced">Advanced</option>
+                    </select>
+                    <textarea name="injury_history" rows="3" placeholder="Injury history, contoh: Sciatica kiri, hamstring"></textarea>
+                    <div class="button-row">
+                        <button type="button" class="ghost-btn prev-step">BACK</button>
+                        <button type="button" class="pill-btn next-step">NEXT</button>
+                    </div>
+                </section>
+                <section class="step-panel" data-step="2">
+                    <input type="number" step="0.5" name="initial_dl" min="1" placeholder="Initial Deadlift 1RM (kg)" required>
+                    <input type="number" step="0.5" name="initial_sq" min="1" placeholder="Initial Squat 1RM (kg)" required>
+                    <input type="number" step="0.5" name="initial_bp" min="1" placeholder="Initial Bench Press 1RM (kg)" required>
+                    <p class="microcopy">1RM awal dipakai sebagai prior kekuatan agar RPE validator dan estimasi progres tidak kosong.</p>
+                    <div class="button-row">
+                        <button type="button" class="ghost-btn prev-step">BACK</button>
+                        <button class="pill-btn" type="submit">SIGN UP</button>
+                    </div>
+                </section>
+            </form>
+        </div>
+        <a class="big-link" href="{{ url_for('auth.login') }}">SIGN IN</a>
+    </div>
+</section>
+{% endblock %}

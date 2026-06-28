@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Login · KUAT.{% endblock %}
+{% block body_class %}auth-page{% endblock %}
+{% block content %}
+<section class="auth-shell">
+    <div class="auth-card compact-card">
+        <div class="brand-lockup">
+            <span class="mark big"><i></i><i></i><i></i></span>
+            <h1>KUAT.</h1>
+            <p>let's get your journey at lift.</p>
+        </div>
+        <h2>SIGN IN</h2>
+        <form method="post" class="form-stack">
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <button class="pill-btn" type="submit">LOGIN</button>
+        </form>
+        <a class="big-link" href="{{ url_for('auth.signup') }}">SIGN UP</a>
+    </div>
+</section>
+{% endblock %}

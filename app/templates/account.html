@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon %}
+{% block title %}Akun & Langganan - KUAT.{% endblock %}
+
+{% block content %}
+<div class="account-page">
+
+    <div class="account-header">
+        <h2>{{ icon('user', 22) }} Akun & Langganan</h2>
+        {% if current_user.is_premium() %}
+            <span class="badge badge-premium">⭐ PREMIUM ACTIVE</span>
+        {% else %}
+            <span class="badge badge-free">🆓 FREE VERSION</span>
+        {% endif %}
+    </div>
+
+    <div class="account-grid">
+
+        <div class="card account-profile-card">
+            <h3 class="card-title">{{ icon('user', 14) }} PROFIL</h3>
+            <div class="profile-row"><span>Nama</span><strong>{{ current_user.name }}</strong></div>
+            <div class="profile-row"><span>Email</span><strong>{{ current_user.email }}</strong></div>
+            <div class="profile-row"><span>Experience Level</span><strong>{{ current_user.experience_level|capitalize }}</strong></div>
+            <div class="profile-row"><span>Bodyweight</span><strong>{{ current_user.bb }} kg</strong></div>
+            <div class="profile-row"><span>Total Workout</span><strong>{{ total_workout }}</strong></div>
+            <div class="profile-row"><span>Initial Deadlift / Squat / Bench</span>
+                <strong>{{ current_user.initial_dl }} / {{ current_user.initial_sq }} / {{ current_user.initial_bp }} kg</strong>
+            </div>
+        </div>
+
+        <div class="card account-plan-card">
+            <h3 class="card-title">{{ icon('star', 14) }} PILIHAN PAKET</h3>
+
+            <div class="plan-compare-grid">
+                <div class="plan-box {% if not current_user.is_premium() %}plan-box-active{% endif %}">
+                    <h4>🆓 FREE</h4>
+                    <ul class="plan-feature-list">
+                        <li>Catat latihan & routine tanpa batas</li>
+                        <li>Grafik volume, fatigue, estimasi 1RM</li>
+                        <li>Riwayat latihan tersimpan</li>
+                        <li class="plan-feature-disabled">Early Warning System (RPE/RIR menyimpang)</li>
+                        <li class="plan-feature-disabled">Forced Rest danger alert</li>
+                    </ul>
+                    {% if current_user.is_premium() %}
+                    <form method="POST" action="{{ url_for('account.downgrade') }}">
+                        <button type="submit" class="btn-pill btn-outline btn-block" title="Turunkan kembali ke paket Free">
+                            {{ icon('arrow-left', 16) }} Kembali ke Free
+                        </button>
+                    </form>
+                    {% else %}
+                    <span class="plan-current-label">{{ icon('check', 14) }} Paket Kamu Saat Ini</span>
+                    {% endif %}
+                </div>
+
+                <div class="plan-box plan-box-premium {% if current_user.is_premium() %}plan-box-active{% endif %}">
+                    <h4>⭐ PREMIUM</h4>
+                    <ul class="plan-feature-list">
+                        <li>Semua fitur Free</li>
+                        <li>Early Warning System personal berbasis pola RPE/RIR kamu</li>
+                        <li>Peringatan otomatis saat set menyimpang dari rata-rata pribadi</li>
+                        <li>Forced rest modal saat kategori danger</li>
+                        <li>Badge premium di halaman Train</li>
+                    </ul>
+                    {% if current_user.is_premium() %}
+                    <span class="plan-current-label">{{ icon('check', 14) }} Paket Kamu Saat Ini</span>
+                    {% else %}
+                    <form method="POST" action="{{ url_for('account.upgrade') }}">
+                        <button type="submit" class="btn-pill btn-lime btn-block" title="Aktifkan semua fitur Premium sekarang">
+                            {{ icon('star', 16) }} Upgrade ke Premium
+                        </button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+
+            <p class="account-disclaimer-note">
+                {{ icon('info', 13) }} Ini adalah prototype — upgrade/downgrade di sini bersifat simulasi (tanpa pembayaran nyata),
+                untuk menunjukkan perbedaan fungsi Free vs Premium pada engine KUAT.
+            </p>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

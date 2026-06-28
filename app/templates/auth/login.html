@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon %}
+{% block title %}Login - KUAT.{% endblock %}
+{% block body_class %}auth-page{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper">
+    <div class="auth-card">
+        <div class="auth-logo">
+            <div class="logo-blocks">
+                <span class="block block-grey"></span>
+                <span class="block block-dark"></span>
+                <span class="block block-black"></span>
+            </div>
+            <div class="logo-text-big">KUAT.</div>
+            <div class="logo-tagline">let's get your journey at lift.</div>
+        </div>
+
+        <h2 class="auth-title">SIGN IN</h2>
+
+        <form method="POST" action="{{ url_for('auth.login') }}" class="auth-form">
+            <div class="input-group input-group-icon">
+                {{ icon('mail', 18, cls="input-icon") }}
+                <input type="email" name="email" placeholder="Email" required>
+            </div>
+            <div class="input-group input-group-icon">
+                {{ icon('lock', 18, cls="input-icon") }}
+                <input type="password" name="password" placeholder="Password" required>
+            </div>
+            <button type="submit" class="btn-pill btn-dark btn-block" title="Masuk ke akun KUAT kamu">
+                {{ icon('arrow-left', 16, cls="icon-flip") }} LOGIN
+            </button>
+        </form>
+
+        <a href="{{ url_for('auth.signup') }}" class="auth-secondary-link" title="Belum punya akun? Daftar di sini">SIGN UP</a>
+        <hr class="auth-divider">
+    </div>
+</div>
+{% endblock %}

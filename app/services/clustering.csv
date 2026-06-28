@@ -1,0 +1,69 @@
+Kategori,Nama Latihan,Target Otot,Peralatan,Tipe,Deskripsi Singkat,CNS Cluster
+Compound,Barbell Back Squat,"Quadriceps, Glutes, Core",Barbell,Compound,"Squat dengan barbell di belakang bahu, turun hingga paha sejajar lantai.",A
+Compound,Front Squat,"Quadriceps, Core",Barbell,Compound,"Squat dengan barbell di depan bahu, menjaga tubuh lebih tegak.",A
+Compound,Overhead Squat,"Quadriceps, Bahu, Core",Barbell,Compound,Squat dengan barbell terangkat lurus di atas kepala.,A
+Compound,Box Squat,"Quadriceps, Glutes",Barbell,Compound,Squat duduk ke box lalu berdiri kembali.,A
+Compound,Bulgarian Split Squat,"Quadriceps, Glutes",Dumbbell,Compound,Split squat dengan kaki belakang diangkat ke bench.,B
+Compound,Goblet Squat,"Quadriceps, Glutes",Dumbbell,Compound,Squat sambil memegang dumbbell di depan dada.,B
+Compound,Deadlift,"Hamstring, Glutes, Punggung",Barbell,Compound,Angkat barbell dari lantai dengan punggung lurus hingga berdiri tegak.,A
+Compound,Romanian Deadlift,"Hamstring, Glutes",Barbell,Compound,"Deadlift dengan lutut sedikit menekuk, fokus pada hamstring.",B
+Compound,Sumo Deadlift,"Hamstring, Glutes, Adductor",Barbell,Compound,Deadlift dengan stance lebar dan grip di dalam kaki.,A
+Compound,Stiff Leg Deadlift,Hamstring,Barbell,Compound,"Deadlift dengan lutut hampir lurus, fokus stretch hamstring.",B
+Compound,Trap Bar Deadlift,"Quadriceps, Hamstring, Glutes",Trap Bar,Compound,Deadlift menggunakan trap bar untuk posisi tubuh lebih netral.,A
+Compound,Bench Press,"Dada, Triceps, Bahu",Barbell,Compound,Dorong barbell dari dada ke atas sambil berbaring di bench.,A
+Compound,Incline Bench Press,"Dada Atas, Bahu",Barbell,Compound,Bench press pada bench miring untuk menekankan dada atas.,A
+Compound,Decline Bench Press,Dada Bawah,Barbell,Compound,Bench press pada bench menurun untuk dada bagian bawah.,B
+Compound,Close Grip Bench Press,"Triceps, Dada",Barbell,Compound,Bench press dengan grip sempit untuk fokus triceps.,B
+Compound,Dumbbell Bench Press,"Dada, Triceps",Dumbbell,Compound,Dorong dumbbell dari dada sambil berbaring di bench.,B
+Compound,Overhead Press,"Bahu, Triceps",Barbell,Compound,Dorong barbell dari depan bahu ke atas kepala.,A
+Compound,Push Press,"Bahu, Triceps, Kaki",Barbell,Compound,Overhead press dibantu sedikit dorongan dari kaki.,A
+Compound,Dumbbell Shoulder Press,"Bahu, Triceps",Dumbbell,Compound,Dorong dumbbell dari bahu ke atas kepala.,B
+Compound,Arnold Press,"Bahu, Triceps",Dumbbell,Compound,Shoulder press dengan rotasi pergelangan tangan saat naik.,B
+Compound,Barbell Row,"Punggung, Bisep",Barbell,Compound,Tarik barbell ke perut dalam posisi badan membungkuk.,B
+Compound,Pendlay Row,"Punggung, Bisep",Barbell,Compound,Barbell row eksplosif dimulai dari lantai setiap repetisi.,B
+Compound,T-Bar Row,"Punggung, Bisep",T-Bar Machine,Compound,Tarik T-bar ke arah dada dalam posisi membungkuk.,B
+Compound,Pull Up,"Punggung, Bisep",Pull Up Bar,Compound,Tarik tubuh ke atas hingga dagu melewati bar.,B
+Compound,Chin Up,"Punggung, Bisep",Pull Up Bar,Compound,"Pull up dengan grip menghadap tubuh, fokus bisep.",B
+Compound,Lat Pulldown,Punggung,Cable Machine,Compound,Tarik cable bar ke dada dari posisi tangan di atas kepala.,B
+Compound,Seated Cable Row,"Punggung, Bisep",Cable Machine,Compound,Tarik handle cable ke arah perut sambil duduk.,B
+Compound,Chest Supported Row,Punggung,Dumbbell/Machine,Compound,Row dengan dada bersandar di bench untuk isolasi punggung.,B
+Compound,Leg Press,"Quadriceps, Glutes",Machine,Compound,Dorong beban menggunakan kedua kaki pada mesin leg press.,B
+Compound,Hack Squat,"Quadriceps, Glutes",Machine,Compound,Squat menggunakan mesin hack squat dengan punggung bersandar.,B
+Compound,Hip Thrust,Glutes,Barbell,Compound,Angkat pinggul ke atas dengan barbell bersandar di paha.,B
+Compound,Glute Bridge,Glutes,Bodyweight/Barbell,Compound,Angkat pinggul dari posisi berbaring untuk mengaktifkan glutes.,C
+Compound,Walking Lunges,"Quadriceps, Glutes",Dumbbell,Compound,Melangkah maju bergantian sambil menekuk lutut hingga 90 derajat.,B
+Compound,Reverse Lunges,"Quadriceps, Glutes",Dumbbell,Compound,Melangkah ke belakang lalu menekuk lutut hingga 90 derajat.,B
+Compound,Step Up,"Quadriceps, Glutes",Dumbbell/Box,Compound,Naik ke atas box dengan satu kaki secara bergantian.,B
+Compound,Dip,"Triceps, Dada",Dip Bar,Compound,Turunkan tubuh menggunakan dip bar lalu dorong kembali ke atas.,B
+Compound,Push Up,"Dada, Triceps",Bodyweight,Compound,Dorong tubuh dari posisi plank menggunakan tangan.,C
+Compound,Farmer Carry,"Grip, Core, Trapezius",Dumbbell/Kettlebell,Compound,Berjalan membawa beban berat di kedua tangan.,B
+Compound,Power Clean,Total Body,Barbell,Compound,Angkat barbell dari lantai ke posisi rak bahu secara eksplosif.,A
+Compound,Hang Clean,Total Body,Barbell,Compound,Power clean dimulai dari posisi barbell sejajar lutut.,A
+Compound,Clean and Jerk,Total Body,Barbell,Compound,Angkat barbell ke bahu lalu dorong ke atas kepala.,A
+Compound,Snatch,Total Body,Barbell,Compound,Angkat barbell dari lantai langsung ke atas kepala dalam satu gerakan.,A
+Isolasi,Lateral Raise,Bahu (medial deltoid),Dumbbell,Isolasi,Angkat dumbbell ke samping tubuh hingga sejajar bahu.,C
+Isolasi,Front Raise,Bahu (anterior deltoid),Dumbbell,Isolasi,Angkat dumbbell ke depan tubuh hingga sejajar bahu.,C
+Isolasi,Rear Delt Fly,Bahu (posterior deltoid),Dumbbell,Isolasi,Bungkukkan badan lalu angkat dumbbell ke samping.,C
+Isolasi,Face Pull,"Bahu Belakang, Upper Back",Cable Machine,Isolasi,Tarik tali cable ke arah wajah dengan siku tinggi.,C
+Isolasi,Biceps Curl,Bisep,Dumbbell,Isolasi,Tekuk siku mengangkat dumbbell ke arah bahu.,C
+Isolasi,Barbell Curl,Bisep,Barbell,Isolasi,Tekuk siku mengangkat barbell ke arah dada.,C
+Isolasi,Hammer Curl,"Bisep, Brachialis",Dumbbell,Isolasi,Biceps curl dengan grip netral menyerupai memukul palu.,C
+Isolasi,Preacher Curl,Bisep,Barbell/Dumbbell,Isolasi,Biceps curl dengan lengan bersandar di preacher bench.,C
+Isolasi,Triceps Pushdown,Triceps,Cable Machine,Isolasi,Dorong cable bar ke bawah dengan meluruskan siku.,C
+Isolasi,Overhead Triceps Extension,Triceps,Dumbbell,Isolasi,Luruskan siku mengangkat dumbbell dari belakang kepala.,C
+Isolasi,Skull Crusher,Triceps,Barbell/EZ Bar,Isolasi,Turunkan bar ke dahi sambil berbaring lalu luruskan siku kembali.,C
+Isolasi,Cable Kickback,Triceps,Cable Machine,Isolasi,Luruskan siku ke belakang melawan tahanan cable.,C
+Isolasi,Leg Curl,Hamstring,Machine,Isolasi,Tekuk lutut melawan beban pada mesin leg curl.,C
+Isolasi,Leg Extension,Quadriceps,Machine,Isolasi,Luruskan lutut melawan beban pada mesin leg extension.,C
+Isolasi,Calf Raise,Betis (Gastrocnemius),Machine/Dumbbell,Isolasi,Angkat tumit menjinjit melawan beban berdiri.,C
+Isolasi,Seated Calf Raise,Betis (Soleus),Machine,Isolasi,Angkat tumit menjinjit melawan beban sambil duduk.,C
+Isolasi,Hip Abduction,Glutes Medius,Machine,Isolasi,Buka kaki melawan tahanan pada mesin hip abduction.,C
+Isolasi,Hip Adduction,Adductor,Machine,Isolasi,Tutup kaki melawan tahanan pada mesin hip adduction.,C
+Isolasi,Cable Chest Fly,Dada,Cable Machine,Isolasi,Satukan kedua tangan di depan dada melawan tahanan cable.,C
+Isolasi,Pec Deck Machine,Dada,Machine,Isolasi,Satukan kedua lengan di depan dada menggunakan mesin pec deck.,C
+Isolasi,Shrug,Trapezius,Barbell/Dumbbell,Isolasi,Angkat bahu lurus ke atas sambil memegang beban.,C
+Core,Plank,"Core, Abdominal",Bodyweight,Isolasi,Tahan posisi tubuh lurus bertumpu pada lengan dan kaki.,C
+Core,Hanging Leg Raise,"Core, Abdominal Bawah",Pull Up Bar,Isolasi,Angkat kaki lurus ke atas sambil bergantung di bar.,C
+Core,Cable Crunch,"Core, Abdominal",Cable Machine,Isolasi,Tekuk badan ke bawah melawan tahanan cable sambil berlutut.,C
+Core,Russian Twist,"Core, Oblique",Bodyweight/Plate,Isolasi,Putar badan ke kanan dan kiri sambil duduk setengah rebah.,C
+Core,Ab Wheel Rollout,"Core, Abdominal",Ab Wheel,Compound,Dorong roda ke depan menjaga punggung tetap lurus.,B

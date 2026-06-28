@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon %}
+{% block title %}Exercise - KUAT.{% endblock %}
+
+{% block content %}
+<div class="exercise-layout">
+
+    <aside class="exercise-sidebar">
+
+        <div class="sidebar-block">
+            <label class="sidebar-form-label">{{ icon('folder', 14) }} ROUTINE AKTIF</label>
+            <select class="routine-switcher" onchange="if(this.value){window.location.href=this.value}" title="Pilih routine untuk ditampilkan/diedit">
+                <option value="" disabled {% if not active_plan %}selected{% endif %}>Pilih routine untuk dibuka...</option>
+                {% for p in plans %}
+                    <option value="{{ url_for('exercise.index', plan_id=p.id) }}" {% if active_plan and active_plan.id == p.id %}selected{% endif %}>
+                        {{ p.folder_name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <form method="POST" action="{{ url_for('exercise.create_plan') }}" class="sidebar-block create-plan-form">
+            <span class="sidebar-form-label">{{ icon('folder-plus', 14) }} BUAT ROUTINE BARU</span>
+            <input type="text" name="folder_name" class="sidebar-input" placeholder="Nama routine (contoh: Push Day)" required>
+            <select name="train_focus" class="sidebar-input">
+                <option value="" selected disabled>Pilih fokus latihan</option>
+                <option value="Push">Push</option>
+                <option value="Pull">Pull</option>
+                <option value="Legs">Legs</option>
+                <option value="Full Body">Full Body</option>
+                <option value="Upper Body">Upper Body</option>
+                <option value="Lower Body">Lower Body</option>
+            </select>
+            <textarea name="notes" class="sidebar-input" placeholder="Catatan tambahan (opsional)" rows="2"></textarea>
+            <button type="submit" class="btn-sidebar-labeled btn-sidebar-primary" title="Simpan routine baru ini">
+                {{ icon('plus', 16) }} BUAT ROUTINE
+            </button>
+        </form>
+
+        {% if active_plan %}
+        <form method="POST" action="{{ url_for('exercise.add_item', plan_id=active_plan.id) }}" class="sidebar-block add-item-form">
+            <span class="sidebar-form-label">{{ icon('dumbbell', 14) }} TAMBAH EXERCISE</span>
+            <p class="sidebar-form-hint">Ke routine "{{ active_plan.folder_name }}"</p>
+            <select name="exercise_id" class="sidebar-input" required>
+                <option value="" disabled selected>Pilih gerakan...</option>
+                {% for ex in exercises %}
+                    <option value="{{ ex.id }}">{{ ex.nama_latihan }} (cluster {{ ex.cns_cluster }})</option>
+                {% endfor %}
+            </select>
+            <div class="sidebar-input-row">
+                <input type="number" name="target_sets" class="sidebar-input" placeholder="Sets" min="1" value="3" required title="Jumlah target set">
+                <input type="number" name="target_reps" class="sidebar-input" placeholder="Reps" min="1" value="10" required title="Jumlah target reps per set">
+                <input type="number" step="0.5" name="target_weight" class="sidebar-input" placeholder="Kg" min="0" value="20" required title="Target beban (kg)">
+            </div>
+            <button type="submit" class="btn-sidebar-labeled btn-sidebar-primary" title="Tambahkan exercise ini ke routine">
+                {{ icon('plus', 16) }} TAMBAHKAN KE ROUTINE
+            </button>
+        </form>
+        {% endif %}
+
+        <div class="sidebar-block">
+            <h4 class="sidebar-heading">{{ icon('clock', 14) }} RECENT WORKOUT</h4>
+            <div class="recent-workout-list">
+                {% for p in plans[:7] %}
+                <a href="{{ url_for('exercise.index', plan_id=p.id) }}" class="recent-workout-chip" title="Buka routine {{ p.folder_name }}">
+                    {{ icon('dumbbell', 18) }}
+                    <span class="chip-text">
+                        <strong>{{ p.folder_name }}</strong>
+                        <small>{{ p.items|length }} exercise</small>
+                    </span>
+                </a>
+                {% else %}
+                <p class="empty-text-small">Belum ada routine. Buat routine pertamamu di atas.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        {% if active_plan %}
+        <a href="{{ url_for('train.train_session', plan_id=active_plan.id) }}" class="btn-train-big" title="Mulai sesi latihan untuk routine ini">
+            {{ icon('play', 24) }} TRAIN
+        </a>
+        {% endif %}
+
+    </aside>
+
+    <section class="exercise-main">
+        {% if not active_plan %}
+            <div class="empty-state-card">
+                <span class="empty-state-icon">{{ icon('folder-plus', 30) }}</span>
+                <p class="empty-state-title">Belum ada routine yang dipilih</p>
+                <p class="empty-text-small">Buat routine baru lewat form di sidebar kiri, lalu tambahkan exercise ke dalamnya.</p>
+            </div>
+        {% else %}
+            <div class="exercise-main-header">
+                <h2>{{ active_plan.folder_name }}</h2>
+                {% if active_plan.train_focus %}<span class="focus-badge">{{ icon('target', 12) }} {{ active_plan.train_focus }}</span>{% endif %}
+                <form method="POST" action="{{ url_for('exercise.delete_plan', plan_id=active_plan.id) }}" class="inline-form" onsubmit="return confirm('Hapus routine \'{{ active_plan.folder_name }}\' beserta semua exercise di dalamnya? Tindakan ini tidak bisa dibatalkan.');">
+                    <button type="submit" class="btn-delete-plan" title="Hapus routine ini secara permanen">{{ icon('trash', 14) }} Hapus Routine</button>
+                </form>
+            </div>
+
+            {% if active_plan.items %}
+                {% for item in active_plan.items %}
+                <div class="exercise-item-card">
+                    <div class="exercise-item-header">
+                        <div>
+                            <h3>{{ item.nama_gerakan }}</h3>
+                            {% if item.exercise %}
+                            <p class="exercise-item-desc">{{ item.exercise.deskripsi_singkat }}</p>
+                            {% endif %}
+                        </div>
+                        <button class="btn-edit-toggle" type="button"
+                                title="Ubah target sets/reps/kg atau hapus exercise ini"
+                                onclick="const p=document.getElementById('edit-{{ item.id }}'); p.classList.toggle('open'); this.classList.toggle('is-open');">
+                            {{ icon('edit', 14) }} EDIT
+                        </button>
+                    </div>
+
+                    <table class="set-table">
+                        <thead>
+                            <tr>
+                                <th>SET</th>
+                                <th>TARGET MUSCLE</th>
+                                <th>(KG)</th>
+                                <th>REPS</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for s in range(1, item.target_sets + 1) %}
+                            <tr>
+                                <td>{{ s }}</td>
+                                <td>{{ item.exercise.target_otot if item.exercise else "-" }}</td>
+                                <td>{{ item.target_weight }}</td>
+                                <td>{{ item.target_reps }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                    <div class="item-edit-panel" id="edit-{{ item.id }}">
+                        <form method="POST" action="{{ url_for('exercise.edit_item', item_id=item.id) }}" class="item-edit-form">
+                            <input type="number" name="target_sets" value="{{ item.target_sets }}" min="1" placeholder="Sets" title="Target sets">
+                            <input type="number" name="target_reps" value="{{ item.target_reps }}" min="1" placeholder="Reps" title="Target reps">
+                            <input type="number" step="0.5" name="target_weight" value="{{ item.target_weight }}" min="0" placeholder="Kg" title="Target beban (kg)">
+                            <button type="submit" class="btn-pill btn-dark btn-small" title="Simpan perubahan target">{{ icon('check', 14) }} SIMPAN</button>
+                        </form>
+                        <form method="POST" action="{{ url_for('exercise.delete_item', item_id=item.id) }}" class="item-delete-form" onsubmit="return confirm('Hapus \'{{ item.nama_gerakan }}\' dari routine ini?');">
+                            <button type="submit" class="btn-pill btn-danger btn-small" title="Hapus exercise ini dari routine">{{ icon('trash', 14) }} HAPUS</button>
+                        </form>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state-card">
+                    <span class="empty-state-icon">{{ icon('dumbbell', 30) }}</span>
+                    <p class="empty-state-title">Belum ada exercise di routine ini</p>
+                    <p class="empty-text-small">Tambahkan exercise lewat form "TAMBAH EXERCISE" di sidebar kiri.</p>
+                </div>
+            {% endif %}
+        {% endif %}
+    </section>
+</div>
+{% endblock %}

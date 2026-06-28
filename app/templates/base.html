@@ -1,0 +1,58 @@
+{% from "_icons.html" import icon %}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}KUAT.{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+    {% block head %}{% endblock %}
+</head>
+<body class="kuat-body {% block body_class %}{% endblock %}">
+
+    {% if current_user.is_authenticated %}
+    <nav class="navbar">
+        <div class="navbar-links" id="navbarLinks">
+            <a href="{{ url_for('home.index') }}" class="nav-link {% if request.endpoint == 'home.index' %}active{% endif %}" title="Lihat dashboard & progress">{{ icon('home', 16) }} HOME</a>
+            <a href="{{ url_for('exercise.index') }}" class="nav-link {% if request.endpoint == 'exercise.index' %}active{% endif %}" title="Kelola routine & daftar exercise">{{ icon('dumbbell', 16) }} EXERCISE</a>
+            <a href="{{ url_for('routine.index') }}" class="nav-link {% if request.endpoint == 'routine.index' %}active{% endif %}" title="Lihat semua routine tersimpan">{{ icon('folder', 16) }} ROUTINES</a>
+            <a href="{{ url_for('train.train_landing') }}" class="nav-link {% if request.endpoint and request.endpoint.startswith('train.') %}active{% endif %}" title="Mulai sesi latihan">{{ icon('play', 16) }} TRAIN</a>
+            <a href="{{ url_for('account.index') }}" class="nav-link {% if request.endpoint and request.endpoint.startswith('account.') %}active{% endif %}" title="Profil & paket langganan">{{ icon('user', 16) }} AKUN</a>
+            <a href="{{ url_for('auth.logout') }}" class="nav-link nav-link-logout" title="Keluar dari akun">{{ icon('logout', 16) }} LOGOUT</a>
+        </div>
+        <div class="navbar-logo">
+            <div class="logo-blocks">
+                <span class="block block-grey"></span>
+                <span class="block block-dark"></span>
+                <span class="block block-black"></span>
+            </div>
+            <span class="logo-text">KUAT.</span>
+        </div>
+        <button class="navbar-toggle" id="navbarToggle" aria-label="Buka menu navigasi" title="Buka menu navigasi">
+            <span></span><span></span><span></span>
+        </button>
+    </nav>
+    {% endif %}
+
+    <div class="flash-container" id="flashContainer">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-message flash-{{ category }}">
+                        <span>{{ message }}</span>
+                        <button class="flash-close" onclick="this.parentElement.remove()" title="Tutup notifikasi" aria-label="Tutup notifikasi">{{ icon('cross', 12) }}</button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <main class="kuat-main">
+        {% block content %}{% endblock %}
+    </main>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

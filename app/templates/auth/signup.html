@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon %}
+{% block title %}Sign Up - KUAT.{% endblock %}
+{% block body_class %}auth-page{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper">
+    <div class="auth-card auth-card-stepper">
+        <div class="auth-logo">
+            <div class="logo-blocks">
+                <span class="block block-grey"></span>
+                <span class="block block-dark"></span>
+                <span class="block block-black"></span>
+            </div>
+            <div class="logo-text-big">KUAT.</div>
+        </div>
+
+        <h2 class="auth-title">SIGN UP</h2>
+
+        <div class="stepper-indicator">
+            <span class="step-dot active" data-step-dot="1" title="Step 1: Informasi Akun"></span>
+            <span class="step-dot" data-step-dot="2" title="Step 2: Data Diri"></span>
+            <span class="step-dot" data-step-dot="3" title="Step 3: Target & Paket"></span>
+        </div>
+
+        <form method="POST" action="{{ url_for('auth.signup') }}" class="auth-form stepper-form" id="signupForm">
+
+            <!-- STEP 1: AKUN -->
+            <div class="form-step active" data-step="1">
+                <p class="step-heading">{{ icon('user', 16) }} Informasi Akun</p>
+
+                <label class="input-label">Name</label>
+                <div class="input-group">
+                    <input type="text" name="name" placeholder="Nama lengkap" required>
+                </div>
+
+                <label class="input-label">Email</label>
+                <div class="input-group input-group-icon">
+                    {{ icon('mail', 18, cls="input-icon") }}
+                    <input type="email" name="email" placeholder="Email" required>
+                </div>
+
+                <label class="input-label">Password</label>
+                <div class="input-group input-group-icon">
+                    {{ icon('lock', 18, cls="input-icon") }}
+                    <input type="password" name="password" placeholder="Minimal 6 karakter" minlength="6" required>
+                </div>
+
+                <label class="input-label">Confirm Password</label>
+                <div class="input-group input-group-icon">
+                    {{ icon('lock', 18, cls="input-icon") }}
+                    <input type="password" name="confirm_password" placeholder="Ulangi password" minlength="6" required>
+                </div>
+
+                <button type="button" class="btn-pill btn-dark btn-block step-next" title="Lanjut ke data diri">
+                    NEXT {{ icon('chevron-right', 16) }}
+                </button>
+            </div>
+
+            <!-- STEP 2: DATA DIRI -->
+            <div class="form-step" data-step="2">
+                <p class="step-heading">{{ icon('target', 16) }} Data Diri</p>
+
+                <label class="input-label">Gender</label>
+                <div class="input-group">
+                    <select name="gender" required>
+                        <option value="" disabled selected>Pilih gender</option>
+                        <option value="L">Laki-laki (L)</option>
+                        <option value="P">Perempuan (P)</option>
+                    </select>
+                </div>
+
+                <label class="input-label">Usia</label>
+                <div class="input-group">
+                    <input type="number" name="usia" placeholder="Usia (tahun)" min="10" max="100" required>
+                </div>
+
+                <label class="input-label">Bodyweight (kg)</label>
+                <div class="input-group">
+                    <input type="number" step="0.1" name="bb" placeholder="Berat badan (kg)" min="1" required>
+                </div>
+
+                <label class="input-label">Height (cm)</label>
+                <div class="input-group">
+                    <input type="number" step="0.1" name="tinggi" placeholder="Tinggi badan (cm)">
+                </div>
+
+                <label class="input-label">Training Experience</label>
+                <div class="input-group">
+                    <select name="experience_level" required>
+                        <option value="" disabled selected>Pilih level</option>
+                        <option value="novice">Novice (&lt; 1 tahun)</option>
+                        <option value="intermediate">Intermediate (1-3 tahun)</option>
+                        <option value="advanced">Advanced (&gt; 3 tahun)</option>
+                    </select>
+                </div>
+
+                <label class="input-label">Injury History (opsional)</label>
+                <div class="input-group">
+                    <textarea name="injury_history" placeholder="Riwayat cedera, jika ada" rows="2"></textarea>
+                </div>
+
+                <div class="step-actions">
+                    <button type="button" class="btn-pill btn-outline step-prev" title="Kembali ke informasi akun">
+                        {{ icon('arrow-left', 16) }} BACK
+                    </button>
+                    <button type="button" class="btn-pill btn-dark step-next" title="Lanjut ke target & paket">
+                        NEXT {{ icon('chevron-right', 16) }}
+                    </button>
+                </div>
+            </div>
+
+            <!-- STEP 3: TARGET + TIER -->
+            <div class="form-step" data-step="3">
+                <p class="step-heading">{{ icon('star', 16) }} Target Angkatan & Paket</p>
+
+                <label class="input-label">Initial Deadlift (kg)</label>
+                <div class="input-group">
+                    <input type="number" step="0.5" name="initial_dl" placeholder="Estimasi 1RM deadlift" min="0" required>
+                </div>
+
+                <label class="input-label">Initial Squat (kg)</label>
+                <div class="input-group">
+                    <input type="number" step="0.5" name="initial_sq" placeholder="Estimasi 1RM squat" min="0" required>
+                </div>
+
+                <label class="input-label">Initial Bench Press (kg)</label>
+                <div class="input-group">
+                    <input type="number" step="0.5" name="initial_bp" placeholder="Estimasi 1RM bench press" min="0" required>
+                </div>
+
+                <label class="input-label">Pilih Tier</label>
+                <div class="tier-choice">
+                    <label class="tier-option">
+                        <input type="radio" name="tier" value="free" checked>
+                        <span>Gratis / Free</span>
+                    </label>
+                    <label class="tier-option tier-option-premium">
+                        <input type="radio" name="tier" value="premium">
+                        <span>⭐ Coba Premium 7 Hari</span>
+                    </label>
+                </div>
+
+                <div class="step-actions">
+                    <button type="button" class="btn-pill btn-outline step-prev" title="Kembali ke data diri">
+                        {{ icon('arrow-left', 16) }} BACK
+                    </button>
+                    <button type="submit" class="btn-pill btn-lime btn-block" title="Buat akun KUAT kamu">
+                        {{ icon('check', 16) }} SIGN UP
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <a href="{{ url_for('auth.login') }}" class="auth-secondary-link" title="Sudah punya akun? Masuk di sini">SIGN IN</a>
+        <hr class="auth-divider">
+    </div>
+</div>
+{% endblock %}

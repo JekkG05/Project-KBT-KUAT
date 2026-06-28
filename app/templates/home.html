@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon %}
+{% block title %}Home - KUAT.{% endblock %}
+
+{% block content %}
+{% if landing_only %}
+<div class="landing-wrapper">
+    <div class="landing-logo">
+        <div class="logo-blocks">
+            <span class="block block-grey"></span>
+            <span class="block block-dark"></span>
+            <span class="block block-black"></span>
+        </div>
+        <div class="logo-text-big">KUAT.</div>
+        <div class="logo-tagline">let's get your journey at lift.</div>
+    </div>
+    <p class="landing-subtitle">
+        Asisten pelatih virtual berbasis sport science. Catat beban, pantau fatigue,
+        dan latihan lebih cerdas dengan KUAT.
+    </p>
+    <div class="landing-actions">
+        <a href="{{ url_for('auth.signup') }}" class="btn-pill btn-lime" title="Daftar akun baru, gratis">{{ icon('plus', 16) }} Try for free</a>
+        <a href="{{ url_for('auth.login') }}" class="btn-pill btn-outline" title="Masuk ke akun yang sudah ada">{{ icon('arrow-left', 16) }} Sign In</a>
+    </div>
+</div>
+
+{% else %}
+<div class="dashboard-grid">
+
+    <section class="hero-card">
+        <div class="hero-avatar">{{ icon('dumbbell', 36) }}</div>
+        <div class="hero-text">
+            <h1>Be Healthier.<br>Be Stronger.<br>Be Confident.</h1>
+            {% if current_user.is_premium() %}
+                <span class="badge badge-premium">⭐ PREMIUM ACTIVE</span>
+            {% else %}
+                <span class="badge badge-free">🆓 FREE VERSION</span>
+                <a href="{{ url_for('account.index') }}" class="btn-pill btn-lime btn-small hero-upgrade-cta" title="Lihat keuntungan Premium & upgrade">
+                    {{ icon('star', 14) }} Upgrade ke Premium
+                </a>
+            {% endif %}
+        </div>
+    </section>
+
+    <section class="card morning-check-card">
+        <h3 class="card-title">{{ icon('clock', 14) }} MORNING CHECK-IN</h3>
+        <p class="card-subtitle">Geser slider sesuai energi tubuhmu hari ini (tanpa data BPM).</p>
+        <form method="POST" action="{{ url_for('home.index') }}" class="morning-check-form">
+            <input type="range" min="1" max="5" step="1" value="3" name="energi_slider" id="energiSlider" class="energy-slider" title="1 = sangat lelah, 5 = sangat segar">
+            <div class="energy-labels">
+                <span>1 Lelah</span>
+                <span id="energiValue">3</span>
+                <span>5 Segar</span>
+            </div>
+            <button type="submit" class="btn-pill btn-lime btn-block" title="Simpan kondisi energi hari ini & update recovery rate">
+                {{ icon('check', 16) }} SUBMIT CHECK-IN
+            </button>
+        </form>
+    </section>
+
+    <section class="card summary-card">
+        <h3 class="card-title">{{ icon('bar-chart', 14) }} SUMMARY</h3>
+        <div class="summary-grid">
+            <div class="summary-item">
+                <span class="summary-icon">{{ icon('trophy', 18) }}</span>
+                <span class="summary-value">{{ total_workout }}</span>
+                <span class="summary-label">Total Workout</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-icon">{{ icon('weight', 18) }}</span>
+                <span class="summary-value">{{ total_volume }} kg</span>
+                <span class="summary-label">Total Volume</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-icon">{{ icon('flame', 18) }}</span>
+                <span class="summary-value">{{ "%.0f"|format((state.cns_fatigue or 0) * 100) }}%</span>
+                <span class="summary-label">CNS Fatigue</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-icon">{{ icon('bolt', 18) }}</span>
+                <span class="summary-value fsm-{{ (state.fsm_state or 'SEGAR')|lower }}">{{ state.fsm_state or "SEGAR" }}</span>
+                <span class="summary-label">FSM State</span>
+            </div>
+        </div>
+    </section>
+
+    {% if total_workout == 0 %}
+    <section class="empty-state-card first-workout-cta">
+        <span class="empty-state-icon">{{ icon('dumbbell', 30) }}</span>
+        <p class="empty-state-title">Belum ada riwayat latihan</p>
+        <p class="empty-text-small">Buat routine pertamamu, lalu mulai TRAIN untuk mulai mengisi grafik progress di bawah.</p>
+        <a href="{{ url_for('exercise.index') }}" class="btn-pill btn-lime" title="Buat routine pertamamu">{{ icon('plus', 16) }} Buat Routine Pertama</a>
+    </section>
+    {% endif %}
+
+    <section class="chart-period-toggle-wrapper">
+        <span class="chart-period-label">{{ icon('bar-chart', 14) }} PROGRESS CHART:</span>
+        <div class="chart-period-toggle">
+            <button type="button" class="period-btn active" data-period="daily" title="Tampilkan data 30 hari terakhir, per hari">HARIAN</button>
+            <button type="button" class="period-btn" data-period="weekly" title="Tampilkan data 12 minggu terakhir, per minggu">MINGGUAN</button>
+            <button type="button" class="period-btn" data-period="monthly" title="Tampilkan data 12 bulan terakhir, per bulan">BULANAN</button>
+        </div>
+    </section>
+
+    <section class="card chart-card">
+        <h3 class="card-title">{{ icon('weight', 14) }} VOLUME / TONNAGE <span id="volumeChartPeriodLabel">(30 HARI TERAKHIR)</span></h3>
+        <canvas id="volumeChart" height="180"></canvas>
+    </section>
+
+    <section class="card chart-card">
+        <h3 class="card-title">{{ icon('flame', 14) }} FATIGUE TOTAL & CNS <span id="fatigueChartPeriodLabel">(30 HARI TERAKHIR)</span></h3>
+        <canvas id="fatigueChart" height="180"></canvas>
+    </section>
+
+    <section class="card chart-card">
+        <h3 class="card-title">{{ icon('target', 14) }} ESTIMASI 1RM / ACWR <span id="oneRmChartPeriodLabel">(30 HARI TERAKHIR)</span></h3>
+        <canvas id="oneRmAcwrChart" height="180"></canvas>
+    </section>
+
+</div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+{% if not landing_only %}
+<script>
+    const KUAT_CHART_DATA = {{ chart_data|tojson }};
+</script>
+<script src="{{ url_for('static', filename='js/chart.js') }}"></script>
+<script>
+    const energiSlider = document.getElementById('energiSlider');
+    const energiValue = document.getElementById('energiValue');
+    if (energiSlider && energiValue) {
+        energiSlider.addEventListener('input', () => {
+            energiValue.textContent = energiSlider.value;
+        });
+    }
+</script>
+{% endif %}
+{% endblock %}

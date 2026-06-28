@@ -1,0 +1,196 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon %}
+{% block title %}Train - KUAT.{% endblock %}
+
+{% block content %}
+<div class="train-page">
+
+    <div class="train-header-row">
+        <h2>{{ icon('dumbbell', 22) }} {{ plan.folder_name }}</h2>
+        {% if current_user.is_premium() %}
+            <span class="badge badge-premium">⭐ PREMIUM ACTIVE</span>
+        {% else %}
+            <span class="badge badge-free">🆓 FREE VERSION</span>
+        {% endif %}
+    </div>
+
+    <div class="train-timers-row">
+        <div class="timer-box">
+            <span class="timer-label">{{ icon('clock', 13) }} WORKOUT TIMER</span>
+            <span class="timer-value" id="workoutTimer">00:00:00</span>
+        </div>
+        <div class="timer-box">
+            <span class="timer-label">{{ icon('clock', 13) }} REST TIMER</span>
+            <span class="timer-value" id="restTimer">00:00</span>
+        </div>
+        <button type="button" class="btn-pill btn-dark" id="startWorkoutBtn" title="Mulai atau hentikan stopwatch durasi latihan">
+            <span id="startWorkoutIconPlay">{{ icon('play', 16) }}</span>
+            <span id="startWorkoutIconPause" class="icon-hidden">{{ icon('pause', 16) }}</span>
+            <span id="startWorkoutLabel">START</span>
+        </button>
+        <button type="button" class="btn-pill btn-outline" id="startRestBtn" title="Mulai hitung mundur waktu istirahat 90 detik">
+            {{ icon('clock', 16) }} START REST
+        </button>
+    </div>
+
+    <div class="train-status-row">
+        <div class="status-box">
+            <span class="status-label">{{ icon('flame', 13) }} CNS FATIGUE</span>
+            <div class="progress-bar-track">
+                <div class="progress-bar-fill" id="cnsFatigueBar" style="width: {{ ((state.cns_fatigue or 0) * 100)|round(0) }}%;"></div>
+            </div>
+            <span class="status-value" id="cnsFatigueValue">{{ ((state.cns_fatigue or 0) * 100)|round(0)|int }}%</span>
+        </div>
+        <div class="status-box">
+            <span class="status-label">{{ icon('bolt', 13) }} FSM STATE</span>
+            <span class="fsm-pill fsm-{{ (state.fsm_state or 'SEGAR')|lower }}" id="fsmStateLabel">{{ state.fsm_state or "SEGAR" }}</span>
+        </div>
+    </div>
+
+    {% if not items %}
+    <div class="empty-state-card">
+        <span class="empty-state-icon">{{ icon('dumbbell', 30) }}</span>
+        <p class="empty-state-title">Belum ada latihan di routine ini</p>
+        <p class="empty-text-small">Tambahkan exercise terlebih dahulu di halaman Exercise sebelum mulai latihan.</p>
+        <a href="{{ url_for('exercise.index', plan_id=plan.id) }}" class="btn-pill btn-lime" title="Buka halaman Exercise untuk menambah gerakan">
+            {{ icon('plus', 16) }} Tambah Exercise
+        </a>
+    </div>
+    {% else %}
+
+    <div class="train-body-grid">
+        <div class="train-input-panel">
+            <div class="set-progress-row">
+                <span class="set-progress-pill">{{ icon('target', 13) }} <span id="setProgressText">SET 1 / {{ items[0].target_sets }}</span></span>
+                <span class="exercise-progress-pill">{{ icon('dumbbell', 13) }} <span id="exerciseProgressText">Gerakan 1 / {{ items|length }}</span></span>
+            </div>
+
+            <h3 id="currentExerciseName">{{ items[0].nama_gerakan }}</h3>
+            <p class="current-exercise-target">
+                Target: <span id="currentTargetSets">{{ items[0].target_sets }}</span> sets &times;
+                <span id="currentTargetReps">{{ items[0].target_reps }}</span> reps @
+                <span id="currentTargetWeight">{{ items[0].target_weight }}</span> kg
+            </p>
+
+            <label class="input-label-dark">{{ icon('weight', 14) }} Beban Aktual (kg)</label>
+            <div class="input-group">
+                <input type="number" step="0.5" id="bebanInput" value="{{ items[0].target_weight }}" min="0" title="Masukkan beban yang benar-benar kamu angkat">
+            </div>
+
+            <label class="input-label-dark">{{ icon('repeat', 14) }} Reps Aktual</label>
+            <div class="input-group">
+                <input type="number" id="repsInput" value="{{ items[0].target_reps }}" min="1" title="Masukkan jumlah repetisi yang benar-benar selesai">
+            </div>
+
+            <label class="input-label-dark">RIR (Reps in Reserve): <span id="rirValue">2</span></label>
+            <input type="range" min="0" max="5" step="1" value="2" id="rirSlider" class="rir-slider" title="0 = sudah failure, 5 = masih jauh dari failure">
+            <p class="rpe-preview">RPE otomatis: <strong id="rpePreview">8</strong></p>
+
+            <button type="button" class="btn-pill btn-lime btn-block" id="doneSetBtn" title="Simpan set ini dan lanjut ke set/gerakan berikutnya">
+                {{ icon('check', 18) }} <span id="doneSetLabel">DONE SET</span>
+            </button>
+            <button type="button" class="btn-pill btn-outline btn-block" id="nextExerciseBtn" title="Lewati sisa set gerakan ini, langsung ke gerakan berikutnya">
+                {{ icon('skip-forward', 16) }} SKIP KE GERAKAN BERIKUTNYA
+            </button>
+            <button type="button" class="btn-pill btn-dark btn-block" id="finishWorkoutBtn" title="Akhiri sesi latihan & lihat ringkasan total volume, set, dan fatigue">
+                {{ icon('trophy', 18) }} DONE LATIHAN
+            </button>
+        </div>
+
+        <div class="train-exercise-list">
+            {% for item in items %}
+            <div class="exercise-item-card train-exercise-card" data-index="{{ loop.index0 }}">
+                <div class="exercise-item-header">
+                    <h3>{{ item.nama_gerakan }}</h3>
+                    <span class="cluster-badge">Cluster {{ item.cluster }}</span>
+                </div>
+                <table class="set-table">
+                    <thead>
+                        <tr>
+                            <th>SET</th>
+                            <th>TARGET MUSCLE</th>
+                            <th>(KG)</th>
+                            <th>REPS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for s in range(1, item.target_sets + 1) %}
+                        <tr data-set="{{ s }}">
+                            <td>{{ s }}</td>
+                            <td>{{ item.exercise.target_otot if item.exercise else "-" }}</td>
+                            <td>{{ item.target_weight }}</td>
+                            <td>{{ item.target_reps }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="kuat-disclaimer">
+        {{ icon('info', 14) }} KUAT membantu estimasi beban latihan dan memberi sinyal kehati-hatian berbasis data latihan pribadi.
+        Ini bukan pengganti diagnosis medis atau pelatih profesional.
+    </div>
+
+</div>
+
+<!-- Toast -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- Danger Modal -->
+<div class="modal-overlay" id="dangerModal">
+    <div class="modal-box">
+        <h3>{{ icon('alert-triangle', 22) }} FORCED REST</h3>
+        <p id="dangerModalMessage"></p>
+        <button type="button" class="btn-pill btn-danger btn-block" id="closeDangerModal">{{ icon('check', 16) }} SAYA MENGERTI</button>
+    </div>
+</div>
+
+<!-- Workout Summary Modal (DONE LATIHAN) -->
+<div class="modal-overlay" id="summaryModal">
+    <div class="modal-box modal-box-summary">
+        <h3 class="summary-modal-title">{{ icon('trophy', 24) }} LATIHAN SELESAI</h3>
+        <div class="summary-stat-grid">
+            <div class="summary-stat-item">
+                <span class="summary-stat-value" id="summaryTotalSets">0</span>
+                <span class="summary-stat-label">Total Set</span>
+            </div>
+            <div class="summary-stat-item">
+                <span class="summary-stat-value" id="summaryTotalVolume">0</span>
+                <span class="summary-stat-label">Total Volume (kg)</span>
+            </div>
+            <div class="summary-stat-item">
+                <span class="summary-stat-value" id="summaryAvgRpe">0</span>
+                <span class="summary-stat-label">Rata-rata RPE</span>
+            </div>
+            <div class="summary-stat-item">
+                <span class="summary-stat-value" id="summaryDuration">00:00:00</span>
+                <span class="summary-stat-label">Durasi Latihan</span>
+            </div>
+            <div class="summary-stat-item">
+                <span class="summary-stat-value" id="summaryCns">0%</span>
+                <span class="summary-stat-label">CNS Fatigue Akhir</span>
+            </div>
+            <div class="summary-stat-item">
+                <span class="summary-stat-value" id="summaryFsm">SEGAR</span>
+                <span class="summary-stat-label">FSM State Akhir</span>
+            </div>
+        </div>
+        <button type="button" class="btn-pill btn-lime btn-block" id="summaryBackToHomeBtn">{{ icon('home', 16) }} KEMBALI KE HOME</button>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const KUAT_PLAN_ID = {{ plan.id }};
+    const KUAT_IS_FREE = {{ "true" if not current_user.is_premium() else "false" }};
+    const KUAT_ITEMS = {{ items_json|tojson }};
+    const KUAT_HOME_URL = "{{ url_for('home.index') }}";
+</script>
+<script src="{{ url_for('static', filename='js/train.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Dashboard · KUAT.{% endblock %}
+{% block content %}
+<section class="hero-grid">
+    <article class="hero-card glass-card">
+        <div>
+            <span class="eyebrow">ASISTEN PELATIH VIRTUAL</span>
+            <h1>Be Healthier.<br>Be Stronger.<br>Be Confident.</h1>
+            <p>KUAT membaca progres 1RM, fatigue, dan ACWR untuk menahan ego lifting sebelum berubah menjadi cedera.</p>
+        </div>
+        <div class="hero-actions">
+            <a href="{{ url_for('exercise.exercise') }}" class="accent-btn">Buat Program</a>
+            <a href="{{ url_for('routine.routines') }}" class="soft-btn">Mulai Train</a>
+        </div>
+    </article>
+    <article class="check-card white-card">
+        <span class="eyebrow dark">MORNING CHECK-IN</span>
+        <h2>Recovery Bayesian</h2>
+        <form method="post" class="check-form">
+            <label>Energi pagi: <output id="energyOutput">3</output>/5</label>
+            <input type="range" name="energi_slider" min="1" max="5" value="3" id="energyRange">
+            <label>BPM pagi</label>
+            <input type="number" name="bpm_pagi" min="35" max="140" value="{{ current_user.bpm_base }}" required>
+            <button class="pill-btn" type="submit">UPDATE RECOVERY</button>
+        </form>
+    </article>
+</section>
+
+<section class="metric-grid">
+    <div class="metric-card"><span>Deadlift 1RM</span><b>{{ '%.1f'|format(state.dl_1rm or 0) }} kg</b></div>
+    <div class="metric-card"><span>Squat 1RM</span><b>{{ '%.1f'|format(state.sq_1rm or 0) }} kg</b></div>
+    <div class="metric-card"><span>Bench 1RM</span><b>{{ '%.1f'|format(state.bp_1rm or 0) }} kg</b></div>
+    <div class="metric-card"><span>Total Fatigue</span><b>{{ '%.3f'|format(state.total_fatigue or 0) }}</b></div>
+    <div class="metric-card"><span>k_recovery</span><b>{{ '%.5f'|format(state.k_recovery or 0) }}</b></div>
+    <div class="metric-card"><span>FSM</span><b>{{ state.fsm_state or 'Segar' }}</b></div>
+</section>
+
+<section class="charts-grid">
+    <article class="chart-card"><h3>1RM Progress</h3><canvas id="oneRmChart"></canvas></article>
+    <article class="chart-card"><h3>Fatigue Total</h3><canvas id="fatigueChart"></canvas></article>
+    <article class="chart-card"><h3>ACWR</h3><canvas id="acwrChart"></canvas></article>
+</section>
+{% endblock %}
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>window.KUAT_CHART_DATA = {{ chart_data|tojson }};</script>
+<script src="{{ url_for('static', filename='js/chart.js') }}"></script>
+{% endblock %}

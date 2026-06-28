@@ -1,0 +1,69 @@
+Kategori,Nama Latihan,Target Otot,Peralatan,Tipe,Deskripsi Singkat,CNS Cluster
+Chest,Flat Barbell Bench Press,Chest (General),Barbell,Compound,"Baring 5 titik kontak, turunkan bar ke tengah dada, dorong eksplosif.",B
+Chest,Incline Barbell Bench Press,Chest (Upper),Barbell,Compound,"Bench miring (30-45°), fokus target dada bagian atas.",B
+Chest,Decline Barbell Bench Press,Chest (Lower),Barbell,Compound,"Bench menurun, fokus target dada bagian bawah.",B
+Chest,Flat Dumbbell Press,Chest,Dumbbell,Compound,"Press dada dengan dumbbell, range of motion lebih dalam.",B
+Chest,Incline Dumbbell Press,Chest (Upper),Dumbbell,Compound,"Press miring dumbbell, fokus dada atas & stabilitas.",B
+Chest,Decline Dumbbell Press,Chest (Lower),Dumbbell,Compound,"Press menurun dumbbell, fokus dada bawah.",B
+Chest,Weighted Dips,Chest / Triceps,Bodyweight+,Compound,"Celupkan badan di bar paralel, condong depan untuk dada.",B
+Chest,High-to-Low Cable Fly,Chest (Lower),Cable,Isolation,Tarik kabel dari tinggi ke bawah depan pinggang.,C
+Chest,Mid-Height Cable Fly,Chest (Mid),Cable,Isolation,"Tarik kabel sejajar bahu, squeeze maksimal di tengah.",C
+Chest,Low-to-High Cable Fly,Chest (Upper),Cable,Isolation,Tarik kabel dari bawah ke atas depan wajah.,C
+Chest,Pec Deck Machine,Chest,Machine,Isolation,"Gerakan kupu-kupu, siku menekuk, pertemukan tangan.",C
+Chest,Dumbbell Fly,Chest,Dumbbell,Isolation,"Buka tangan lebar di bangku datar, stretching otot dada.",C
+Back,Wide Grip Pulldown,Lats (Width),Cable,Compound,"Tarik bar ke dada atas, pegangan lebar, lebarkan sayap.",B
+Back,Reverse Grip Pulldown,Lats (Lower),Cable,Compound,"Tarik bar telapak menghadap wajah, target lats bawah.",B
+Back,V-Bar Pulldown,Lats (Mid),Cable,Compound,"Pulldown pegangan sempit, fokus lats bagian dalam.",B
+Back,Straight Arm Pulldown,Lats,Cable,Isolation,"Tekan bar dari atas ke paha lengan lurus, isolasi lats.",C
+Back,Bent Over Barbell Row,Back (Thickness),Barbell,Compound,"Bungkuk 45-90°, tarik barbell ke perut, penebal punggung.",B
+Back,Pendlay Row,Back (Power),Barbell,Compound,Beban ditaruh di lantai tiap repetisi (Dead Stop).,B
+Back,Yates Row,Upper Back,Barbell,Compound,"Row badan tegak (70°), fokus punggung atas & traps.",B
+Back,Single Arm Dumbbell Row,Lats,Dumbbell,Compound,"Row satu tangan di bench, tarikan melewati sumbu tubuh.",B
+Back,V-Grip Seated Cable Row,Mid Back,Cable,Compound,"Row duduk pegangan sempit, tarik ke perut, busungkan dada.",B
+Back,Wide Grip Seated Row,Upper Back,Cable,Compound,"Row duduk pegangan lebar, tarik ke arah dada.",B
+Back,T-Bar Row,Mid Back,Machine,Compound,"Row landmine pegangan sempit, ketebalan tengah punggung.",B
+Back,Kelso Shrug,Traps (Mid),Dumbbell,Isolation,"Angkat bahu posisi membungkuk, fokus traps tengah.",C
+Back,Barbell/Dumbbell Shrugs,Traps (Upper),Free Weight,Isolation,"Angkat bahu ke telinga lengan lurus, fokus traps atas.",C
+Posterior,Deadlift (Konvensional),Posterior Chain,Barbell,Compound,"Angkat dari lantai, kaki selebar bahu, punggung lurus.",A
+Posterior,Sumo Deadlift,Posterior / Quads,Barbell,Compound,"Kaki lebar, tangan di dalam, torso tegak.",A
+Posterior,Rack Pull,Back / Lockout,Barbell,Compound,"Angkat barbell dari rak setinggi lutut, kekuatan punggung.",B
+Posterior,Trap Bar Deadlift,Legs / Back,Trap Bar,Compound,"Angkat Hex Bar, posisi tegak, aman untuk punggung bawah.",A
+Posterior,Romanian Deadlift (RDL),Hamstrings,Barbell,Compound,"Turunkan bar dari berdiri hingga bawah lutut, lutut tekuk dikit.",A
+Posterior,Stiff Leg Deadlift,Hamstrings,Barbell,Compound,"Mirip RDL tapi kaki lurus & dari lantai, stretch maksimal.",A
+Posterior,Good Morning,Hams / Low Back,Barbell,Compound,"Barbell di pundak, bungkuk dorong pinggul ke belakang.",A
+Posterior,Back Extension,Lower Back,Machine,Isolation,"Angkat torso dari posisi menekuk, punggung bawah.",C
+Legs,Back Squat,Quads / Glutes,Barbell,Compound,"Barbell di punggung, jongkok hingga pinggul sejajar lutut.",A
+Legs,Front Squat,Quads,Barbell,Compound,"Barbell depan leher, badan tegak, dominasi paha depan.",A
+Legs,Hack Squat,Quads,Machine,Compound,"Squat mesin bersandaran, isolasi quads.",B
+Legs,Leg Press,Quads,Machine,Compound,"Dorong beban dengan kaki, jangan kunci lutut total.",B
+Legs,Belt Squat,Quads,Machine,Compound,"Beban di pinggang, bebas tekanan tulang belakang.",B
+Legs,Bulgarian Split Squat,Legs (Unilateral),Dumbbell,Compound,"Squat satu kaki, kaki belakang di bench.",B
+Legs,Walking Lunge,Legs,Bodyweight+,Compound,"Melangkah depan bergantian, lutut belakang hampir sentuh lantai.",B
+Legs,Single Leg Press,Quads,Machine,Compound,"Leg press satu kaki, perbaiki ketimpangan kekuatan.",B
+Legs,Seated Leg Curl,Hamstrings,Machine,Isolation,"Tekuk lutut ke bawah di mesin, stretch hamstring maksimal.",C
+Legs,Lying Leg Curl,Hamstrings,Machine,Isolation,Tekuk lutut ke pantat sambil telungkup.,C
+Legs,Nordic Hamstring Curl,Hamstrings,Bodyweight,Isolation,"Tahan badan jatuh ke depan lutut terkunci, latihan eksentrik.",C
+Legs,Hip Thrust,Glutes,Barbell,Compound,"Dorong panggul ke atas beban di pinggul, isolasi bokong.",B
+Legs,Standing Calf Raise,Calves (Gastroc),Machine,Isolation,"Jinjit beban berdiri, otot betis bagian besar.",C
+Legs,Seated Calf Raise,Calves (Soleus),Machine,Isolation,"Jinjit posisi duduk, otot betis bagian dalam.",C
+Shoulders,Overhead Press (OHP),Shoulders (Front),Barbell,Compound,Dorong barbell dari dada ke atas kepala vertikal.,A
+Shoulders,Arnold Press,Shoulders,Dumbbell,Compound,"Press dengan rotasi pergelangan tangan, bahu depan & samping.",B
+Shoulders,Front Raise,Shoulders (Front),Dumbbell,Isolation,Angkat beban lurus ke depan mata.,C
+Shoulders,Lateral Raise,Shoulders (Side),Dumbbell,Isolation,"Angkat dumbbell ke samping sejajar bahu, pimpin dengan siku.",C
+Shoulders,Cable Lateral Raise,Shoulders (Side),Cable,Isolation,"Angkat kabel ke samping, ketegangan konstan.",C
+Shoulders,Upright Row,Delts / Traps,Barbell,Compound,"Tarik vertikal ke dagu, siku lebih tinggi dari tangan.",B
+Shoulders,Bent-Over Lateral Raise,Shoulders (Rear),Dumbbell,Isolation,"Bungkuk & angkat ke samping, bahu belakang.",C
+Shoulders,Cable Rear Delt Fly,Shoulders (Rear),Cable,Isolation,Tarik kabel menyilang depan dada.,C
+Shoulders,Face Pulls,Rear Delt,Cable,Isolation,"Tarik tali ke dahi siku tinggi, kesehatan bahu.",C
+Arms,Cable Rope Pushdown,Triceps,Cable,Isolation,"Dorong tali ke bawah, buka ke samping di akhir.",C
+Arms,Straight Bar Pushdown,Triceps,Cable,Isolation,"Dorong bar lurus ke bawah, beban berat.",C
+Arms,Single Arm Rev Pushdown,Triceps,Cable,Isolation,Dorong kabel satu tangan telapak menghadap atas.,C
+Arms,Preacher Curl,Biceps (Short),EZ Bar,Isolation,"Curl di bangku khusus, cegah ayunan.",C
+Arms,Spider Curl,Biceps (Short),Dumbbell,Isolation,"Curl dada bertumpu di bangku miring, gravitasi murni.",C
+Arms,Concentration Curl,Biceps (Peak),Dumbbell,Isolation,"Curl duduk siku diganjal paha dalam, puncak bisep.",C
+Arms,Hammer Curl,Brachialis,Dumbbell,Isolation,"Curl posisi tangan netral (memalu), ketebalan lengan.",C
+Arms,Reverse Grip Curl,Forearms,Barbell,Isolation,"Curl telapak menghadap bawah, lengan bawah atas.",C
+Arms,Wrist Curl,Flexors,Dumbbell,Isolation,Tekuk pergelangan tangan ke atas.,C
+Arms,Reverse Wrist Curl,Extensors,Dumbbell,Isolation,Tekuk pergelangan tangan ke belakang.,C
+Arms,Plate Pinch,Grip,Plate,Isometric,Tahan piringan beban dengan jepitan jari.,C
+Arms,Farmer’s Walk,Grip / Core,Dumbbell,Compound,"Jalan bawa beban berat, latih grip & stamina.",B

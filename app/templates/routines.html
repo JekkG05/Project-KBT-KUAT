@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon %}
+{% block title %}Routines - KUAT.{% endblock %}
+
+{% block content %}
+<div class="routines-page">
+
+    <div class="routines-page-header">
+        <h2 class="routines-page-title">{{ icon('folder', 22) }} Semua Routine Kamu</h2>
+        <a href="{{ url_for('exercise.index') }}" class="btn-pill btn-lime" title="Buka halaman Exercise untuk membuat routine baru">
+            {{ icon('plus', 16) }} BUAT ROUTINE BARU
+        </a>
+    </div>
+
+    <h3 class="section-heading">{{ icon('clock', 16) }} RECENT WORKOUT</h3>
+    <div class="recent-workout-row">
+        {% for log in recent_logs %}
+        <div class="recent-workout-tile">
+            {{ icon('dumbbell', 20) }}
+            <strong>{{ log.nama_gerakan }}</strong>
+            <small>{{ log.volume }} kg &middot; {{ log.created_at.strftime("%d/%m") }}</small>
+        </div>
+        {% else %}
+        <div class="empty-state-card empty-state-inline">
+            <span class="empty-state-icon">{{ icon('clock', 26) }}</span>
+            <p class="empty-text-small">Belum ada riwayat latihan. Klik TRAIN di salah satu routine untuk mulai mengisi riwayat.</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <h3 class="section-heading">{{ icon('folder', 16) }} FOLDER ROUTINE</h3>
+
+    <div class="folder-accordion">
+        {% for plan in plans %}
+        <details class="folder-item" {% if loop.first %}open{% endif %}>
+            <summary>
+                <span class="folder-summary-title">{{ icon('dumbbell', 16) }} {{ plan.folder_name }}</span>
+                <span class="folder-summary-right">
+                    <span class="folder-count">{{ plan.items|length }} exercise</span>
+                    {{ icon('chevron-down', 18, cls="folder-chevron") }}
+                </span>
+            </summary>
+            <div class="folder-body">
+                {% if plan.items %}
+                <div class="folder-exercise-grid">
+                    {% for item in plan.items %}
+                    <div class="folder-exercise-card">
+                        {{ icon('dumbbell', 18) }}
+                        <strong>{{ item.nama_gerakan }}</strong>
+                        <small>{{ item.target_sets }} sets &times; {{ item.target_reps }} reps</small>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="empty-text-small">Belum ada latihan di routine ini. Tambahkan exercise terlebih dahulu di halaman Exercise.</p>
+                {% endif %}
+
+                <div class="folder-actions">
+                    <a href="{{ url_for('train.train_session', plan_id=plan.id) }}" class="btn-pill btn-lime btn-small" title="Mulai latihan dengan routine ini">
+                        {{ icon('play', 14) }} TRAIN
+                    </a>
+                    <a href="{{ url_for('exercise.index', plan_id=plan.id) }}" class="btn-pill btn-outline btn-small" title="Buka & edit routine ini di halaman Exercise">
+                        {{ icon('edit', 14) }} BUKA & EDIT
+                    </a>
+                    <form method="POST" action="{{ url_for('exercise.delete_plan', plan_id=plan.id) }}" class="inline-form" onsubmit="return confirm('Hapus routine \'{{ plan.folder_name }}\' beserta semua exercise di dalamnya?');">
+                        <button type="submit" class="btn-pill btn-danger btn-small" title="Hapus routine ini secara permanen">{{ icon('trash', 14) }} HAPUS</button>
+                    </form>
+                </div>
+            </div>
+        </details>
+        {% else %}
+        <div class="empty-state-card">
+            <span class="empty-state-icon">{{ icon('folder-plus', 30) }}</span>
+            <p class="empty-state-title">Belum ada routine</p>
+            <p class="empty-text-small">Klik "BUAT ROUTINE BARU" di atas untuk membuat routine pertamamu.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
