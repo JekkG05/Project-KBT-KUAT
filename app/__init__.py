@@ -12,9 +12,8 @@ def create_app():
     app.config.from_object("app.config.Config")
 
 
-    # import routes/controller
-    from app.controllers import routes
-    app.register_blueprint(routes)
+from app.controllers.main_controller import routes
+app.register_blueprint(routes)
 
 
     return app
