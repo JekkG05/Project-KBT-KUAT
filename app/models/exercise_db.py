@@ -1,17 +1,43 @@
-from app import db
+class ExerciseDB:
 
+    def __init__(self, data):
 
-class ExerciseDB(db.Model):
-    __tablename__ = "exercise_db"
+        self.id = data.get("id")
 
-    id = db.Column(db.Integer, primary_key=True)
-    kategori = db.Column(db.String(50), nullable=True)
-    nama_latihan = db.Column(db.String(150), nullable=False)
-    target_otot = db.Column(db.String(150), nullable=True)
-    peralatan = db.Column(db.String(100), nullable=True)
-    tipe = db.Column(db.String(50), nullable=True)
-    deskripsi_singkat = db.Column(db.Text, nullable=True)
-    cns_cluster = db.Column(db.String(1), nullable=False, default="B")  # A/B/C
+        self.kategori = data.get(
+            "kategori"
+        )
+
+        self.nama_latihan = data.get(
+            "nama_latihan"
+        )
+
+        self.target_otot = data.get(
+            "target_otot"
+        )
+
+        self.peralatan = data.get(
+            "peralatan"
+        )
+
+        self.tipe = data.get(
+            "tipe"
+        )
+
+        self.deskripsi_singkat = data.get(
+            "deskripsi_singkat"
+        )
+
+        self.cns_cluster = data.get(
+            "cns_cluster",
+            "B"
+        )
+
 
     def __repr__(self):
-        return f"<ExerciseDB {self.nama_latihan} ({self.cns_cluster})>"
+
+        return (
+            f"<ExerciseDB "
+            f"{self.nama_latihan} "
+            f"({self.cns_cluster})>"
+        )
