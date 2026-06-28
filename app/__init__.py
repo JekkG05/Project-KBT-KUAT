@@ -74,7 +74,15 @@ def create_app():
 
         auth_bp,
 
-        home_bp
+        home_bp,
+
+        account_bp,
+
+        exercise_bp,
+
+        routine_bp,
+
+        train_bp
 
     )
 
@@ -87,6 +95,26 @@ def create_app():
 
     app.register_blueprint(
         home_bp
+    )
+
+
+    app.register_blueprint(
+        account_bp
+    )
+
+
+    app.register_blueprint(
+        exercise_bp
+    )
+
+
+    app.register_blueprint(
+        routine_bp
+    )
+
+
+    app.register_blueprint(
+        train_bp
     )
 
 
