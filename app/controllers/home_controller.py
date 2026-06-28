@@ -7,17 +7,11 @@ from flask import (
     flash
 )
 
-from flask_login import (
-    login_required,
-    current_user
-)
-
+from flask_login import current_user
 
 from app.config import supabase
 from app.services.kuat_engine import KuatTracker
-from app.services.chart_generator import (
-    generate_dashboard_chart_data
-)
+from app.services.chart_generator import generate_dashboard_chart_data
 
 
 
@@ -28,18 +22,17 @@ home_bp = Blueprint(
 
 
 
-@home_bp.route(
-    "/",
-    methods=["GET", "POST"]
-)
-@login_required
+@home_bp.route("/", methods=["GET","POST"])
 def index():
 
 
+    if not current_user.is_authenticated:
 
-    # =========================
-    # AMBIL ENGINE STATE
-    # =========================
+        return render_template(
+            "home.html",
+            landing_only=True
+        )
+
 
 
     engine_result = (
@@ -55,22 +48,13 @@ def index():
 
 
 
-    engine_state = (
-
-        engine_result.data[0]
-
-        if engine_result.data
-
-        else None
-
-    )
+    engine_state = None
 
 
+    if engine_result.data:
 
+        engine_state = engine_result.data[0]
 
-    # =========================
-    # BUAT ENGINE BARU
-    # =========================
 
 
     if not engine_state:
@@ -87,77 +71,60 @@ def index():
         )
 
 
-
-        state = tracker.to_dict()
-
-
-
         supabase.table(
             "engine_state"
         ).insert(
             {
 
-                "user_id":
-                    current_user.id,
+                "user_id": current_user.id,
 
-
-                "state_json":
-                    state
+                "state_json": tracker.to_dict()
 
             }
-
         ).execute()
+
+
+
+        state = tracker.to_dict()
 
 
 
     else:
 
 
-        state = engine_state.get(
-            "state_json"
-        )
-
-
-
         tracker = KuatTracker.from_dict(
-            state
+
+            engine_state["state_json"]
+
         )
 
 
+        state = engine_state["state_json"]
 
 
-
-    # =========================
-    # MORNING CHECK
-    # =========================
 
 
     if request.method == "POST":
 
 
-        energi_slider = request.form.get(
-            "energi_slider"
+        energi = request.form.get(
+            "energi_slider",
+            3
         )
-
 
 
         try:
 
-            energi_slider = int(
-                energi_slider
-            )
-
+            energi = int(energi)
 
         except:
 
-            energi_slider = 3
-
-
+            energi = 3
 
 
 
         tracker.morning_check(
-            energi_slider
+            energi
         )
 
 
@@ -167,11 +134,10 @@ def index():
         ).update(
             {
 
-                "state_json":
-                    tracker.to_dict()
+            "state_json":
+                tracker.to_dict()
 
             }
-
         ).eq(
             "user_id",
             current_user.id
@@ -180,10 +146,9 @@ def index():
 
 
         flash(
-            "Morning check-in tersimpan. Semangat latihan hari ini!",
+            "Morning check tersimpan!",
             "success"
         )
-
 
 
         return redirect(
@@ -195,116 +160,65 @@ def index():
 
 
 
-
-
-    # =========================
-    # WORKOUT DATA
-    # =========================
-
-
-    workout_result = (
+    workouts = (
 
         supabase
-
         .table("workout_log")
-
         .select("*")
-
         .eq(
             "user_id",
             current_user.id
         )
-
         .execute()
-
-    )
-
-
-
-    workouts = (
-        workout_result.data
+        .data
         or []
+
     )
 
 
 
-    total_workout = len(
-        workouts
-    )
+    total_workout = len(workouts)
 
 
 
+    total_volume = sum(
 
-    total_volume = round(
-
-        sum(
-
-            float(
-                item.get(
-                    "volume",
-                    0
-                )
+        float(
+            x.get(
+                "volume",
+                0
             )
+        )
 
-            for item in workouts
-
-        ),
-
-        2
+        for x in workouts
 
     )
 
-
-
-
-
-    # =========================
-    # CHART
-    # =========================
 
 
     chart_data = {
 
-
         "daily":
-
-            generate_dashboard_chart_data(
-
-                current_user.id,
-
-                period="daily"
-
-            ),
-
+        generate_dashboard_chart_data(
+            current_user.id,
+            "daily"
+        ),
 
 
         "weekly":
-
-            generate_dashboard_chart_data(
-
-                current_user.id,
-
-                period="weekly"
-
-            ),
-
+        generate_dashboard_chart_data(
+            current_user.id,
+            "weekly"
+        ),
 
 
         "monthly":
-
-            generate_dashboard_chart_data(
-
-                current_user.id,
-
-                period="monthly"
-
-            )
-
+        generate_dashboard_chart_data(
+            current_user.id,
+            "monthly"
+        )
 
     }
-
-
-
 
 
 
@@ -312,18 +226,13 @@ def index():
 
         "home.html",
 
-
         landing_only=False,
-
 
         state=state,
 
-
         total_workout=total_workout,
 
-
         total_volume=total_volume,
-
 
         chart_data=chart_data
 
