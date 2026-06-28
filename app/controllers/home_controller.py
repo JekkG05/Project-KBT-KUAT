@@ -37,7 +37,7 @@ def index():
 
     engine_result = (
         supabase
-        .table("engine_state")
+        .table("engine_states")
         .select("*")
         .eq(
             "user_id",
@@ -57,7 +57,7 @@ def index():
 
 
 
-    if not engine_state:
+    if not engine_states:
 
 
         tracker = KuatTracker(
@@ -72,7 +72,7 @@ def index():
 
 
         supabase.table(
-            "engine_state"
+            "engine_states"
         ).insert(
             {
 
@@ -94,7 +94,7 @@ def index():
 
         tracker = KuatTracker.from_dict(
 
-            engine_state["state_json"]
+            engine_states["state_json"]
 
         )
 
@@ -130,7 +130,7 @@ def index():
 
 
         supabase.table(
-            "engine_state"
+            "engine_states"
         ).update(
             {
 
