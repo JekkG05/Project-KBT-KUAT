@@ -138,7 +138,7 @@ def index():
             .table("workout_plan_items")
             .select("*")
             .eq("plan_id", active_plan.id)
-            .order("id")
+            .order("item_order")
             .execute()
         )
 
@@ -297,6 +297,18 @@ def add_item(plan_id):
 
 
 
+    existing_items_result = (
+        supabase
+        .table("workout_plan_items")
+        .select("id")
+        .eq("plan_id", plan_id)
+        .execute()
+    )
+
+    next_item_order = len(existing_items_result.data or []) + 1
+
+
+
     supabase.table(
         "workout_plan_items"
     ).insert(
@@ -312,6 +324,8 @@ def add_item(plan_id):
                 "cns_cluster",
                 "B"
             ),
+
+            "item_order": next_item_order,
 
             "target_sets": target_sets,
 
