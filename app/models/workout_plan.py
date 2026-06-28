@@ -1,27 +1,66 @@
 from datetime import datetime
 
-from app import db
 
 
-class WorkoutPlan(db.Model):
-    __tablename__ = "workout_plans"
+class WorkoutPlan:
 
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    folder_name = db.Column(db.String(150), nullable=False)
-    train_focus = db.Column(db.String(100), nullable=True)
-    notes = db.Column(db.Text, nullable=True)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    items = db.relationship(
-        "WorkoutPlanItem",
-        backref="plan",
-        lazy=True,
-        cascade="all, delete-orphan",
-        order_by="WorkoutPlanItem.item_order",
-    )
-    logs = db.relationship("WorkoutLog", backref="plan", lazy=True)
+    def __init__(self, data):
+
+        self.id = data.get(
+            "id"
+        )
+
+
+        self.user_id = data.get(
+            "user_id"
+        )
+
+
+        self.folder_name = data.get(
+            "folder_name"
+        )
+
+
+        self.train_focus = data.get(
+            "train_focus"
+        )
+
+
+        self.notes = data.get(
+            "notes"
+        )
+
+
+        self.created_at = data.get(
+            "created_at",
+            datetime.utcnow()
+        )
+
+
+        self.updated_at = data.get(
+            "updated_at",
+            datetime.utcnow()
+        )
+
+
+        # isi dari Supabase kalau join/select nested
+        self.items = data.get(
+            "items",
+            []
+        )
+
+
+        self.logs = data.get(
+            "logs",
+            []
+        )
+
+
 
     def __repr__(self):
-        return f"<WorkoutPlan {self.folder_name}>"
+
+        return (
+            f"<WorkoutPlan "
+            f"{self.folder_name}>"
+        )
