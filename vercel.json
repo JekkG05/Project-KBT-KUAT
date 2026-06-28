@@ -9,7 +9,7 @@
   "routes": [
     {
       "src": "/(.*)",
-      "destination": "run.py"
+      "dest": "run.py"
     }
   ]
 }
