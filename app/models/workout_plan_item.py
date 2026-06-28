@@ -1,27 +1,84 @@
 from datetime import datetime
 
-from app import db
+
+class WorkoutPlanItem:
 
 
-class WorkoutPlanItem(db.Model):
-    __tablename__ = "workout_plan_items"
+    def __init__(self, data):
 
-    id = db.Column(db.Integer, primary_key=True)
-    plan_id = db.Column(db.Integer, db.ForeignKey("workout_plans.id"), nullable=False)
-    exercise_id = db.Column(db.Integer, db.ForeignKey("exercise_db.id"), nullable=True)
+        self.id = data.get(
+            "id"
+        )
 
-    nama_gerakan = db.Column(db.String(150), nullable=False)
-    cluster = db.Column(db.String(1), nullable=False, default="B")  # A/B/C
 
-    target_sets = db.Column(db.Integer, nullable=False, default=3)
-    target_reps = db.Column(db.Integer, nullable=False, default=10)
-    target_weight = db.Column(db.Float, nullable=False, default=0)
+        self.plan_id = data.get(
+            "plan_id"
+        )
 
-    item_order = db.Column(db.Integer, nullable=False, default=0)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
-    exercise = db.relationship("ExerciseDB", lazy=True)
-    logs = db.relationship("WorkoutLog", backref="plan_item", lazy=True)
+        self.exercise_id = data.get(
+            "exercise_id"
+        )
+
+
+        self.nama_gerakan = data.get(
+            "nama_gerakan"
+        )
+
+
+        self.cluster = data.get(
+            "cluster",
+            "B"
+        )
+
+
+        self.target_sets = data.get(
+            "target_sets",
+            3
+        )
+
+
+        self.target_reps = data.get(
+            "target_reps",
+            10
+        )
+
+
+        self.target_weight = data.get(
+            "target_weight",
+            0
+        )
+
+
+        self.item_order = data.get(
+            "item_order",
+            0
+        )
+
+
+        self.created_at = data.get(
+            "created_at",
+            datetime.utcnow()
+        )
+
+
+        # jika Supabase melakukan nested select
+        self.exercise = data.get(
+            "exercise",
+            None
+        )
+
+
+        self.logs = data.get(
+            "logs",
+            []
+        )
+
+
 
     def __repr__(self):
-        return f"<WorkoutPlanItem {self.nama_gerakan}>"
+
+        return (
+            f"<WorkoutPlanItem "
+            f"{self.nama_gerakan}>"
+        )
