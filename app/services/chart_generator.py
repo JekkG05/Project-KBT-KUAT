@@ -10,6 +10,7 @@ waktu yang bisa dipilih user di halaman Home:
 """
 from datetime import datetime, timedelta
 
+from app.config import supabase
 from app.models.workout_log import WorkoutLog
 
 EMPTY_CHART_DATA = {
@@ -46,14 +47,18 @@ def generate_dashboard_chart_data(user_id, period="daily"):
 def _build_chart_data(user_id, days_back, group_fn, label_fn):
     since = datetime.utcnow() - timedelta(days=days_back)
 
-    logs = (
-        WorkoutLog.query.filter(
-            WorkoutLog.user_id == user_id,
-            WorkoutLog.created_at >= since,
-        )
-        .order_by(WorkoutLog.created_at.asc())
-        .all()
+    result = (
+        supabase
+        .table("workout_logs")
+        .select("*")
+        .eq("user_id", user_id)
+        .gte("created_at", since.isoformat())
+        .order("created_at", desc=False)
+        .execute()
     )
+
+    rows = result.data or []
+    logs = [WorkoutLog(row) for row in rows]
 
     if not logs:
         return dict(EMPTY_CHART_DATA)
@@ -62,7 +67,8 @@ def _build_chart_data(user_id, days_back, group_fn, label_fn):
     order = []
 
     for log in logs:
-        key = group_fn(log.created_at)
+        created_at = _parse_dt(log.created_at)
+        key = group_fn(created_at)
         if key not in buckets:
             buckets[key] = {
                 "volume": 0.0,
@@ -93,6 +99,26 @@ def _build_chart_data(user_id, days_back, group_fn, label_fn):
 # ---------------------------------------------------------------------------
 # Grouping key + label helpers (deterministik, tanpa random)
 # ---------------------------------------------------------------------------
+
+def _parse_dt(value):
+    """
+    Supabase mengembalikan created_at sebagai string ISO 8601, bukan
+    objek datetime. Helper ini memastikan kita selalu punya datetime
+    object, baik input-nya sudah datetime atau masih string.
+    """
+    if isinstance(value, datetime):
+        return value
+
+    if isinstance(value, str):
+        normalized = value.replace("Z", "+00:00")
+        try:
+            return datetime.fromisoformat(normalized)
+        except ValueError:
+            # fallback untuk format tanpa microseconds/timezone
+            return datetime.strptime(value[:19], "%Y-%m-%dT%H:%M:%S")
+
+    return datetime.utcnow()
+
 
 def _day_key(dt):
     return dt.strftime("%Y-%m-%d")
