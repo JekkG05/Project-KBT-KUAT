@@ -115,7 +115,7 @@ def login():
 
 
 @auth_bp.route("/signup", methods=["GET", "POST"])
-def signup:
+def signup():
 
 
     if current_user.is_authenticated:
