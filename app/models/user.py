@@ -1,53 +1,106 @@
-from datetime import datetime
-
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from app import db
 
 
-class User(db.Model, UserMixin):
-    __tablename__ = "users"
+class User(UserMixin):
 
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-    password_hash = db.Column(db.String(255), nullable=False)
-    name = db.Column(db.String(120), nullable=False)
+    def __init__(self, data):
 
-    gender = db.Column(db.String(1), nullable=False)  # L atau P
-    usia = db.Column(db.Integer, nullable=False)
-    bb = db.Column(db.Float, nullable=False)
-    tinggi = db.Column(db.Float, nullable=True)
+        self.id = data.get("id")
 
-    experience_level = db.Column(db.String(30), nullable=False)  # novice/intermediate/advanced
-    injury_history = db.Column(db.Text, nullable=True)
+        self.email = data.get("email")
 
-    initial_dl = db.Column(db.Float, nullable=False)
-    initial_sq = db.Column(db.Float, nullable=False)
-    initial_bp = db.Column(db.Float, nullable=False)
+        self.password_hash = data.get(
+            "password_hash"
+        )
 
-    tier = db.Column(db.String(20), default="free", nullable=False)  # free/premium
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+        self.name = data.get(
+            "name"
+        )
 
-    # --- Relationships ---
-    engine_state = db.relationship(
-        "EngineState", backref="user", uselist=False, cascade="all, delete-orphan"
-    )
-    workout_plans = db.relationship(
-        "WorkoutPlan", backref="user", lazy=True, cascade="all, delete-orphan"
-    )
-    workout_logs = db.relationship(
-        "WorkoutLog", backref="user", lazy=True, cascade="all, delete-orphan"
-    )
+
+        self.gender = data.get(
+            "gender"
+        )
+
+        self.usia = data.get(
+            "usia"
+        )
+
+        self.bb = data.get(
+            "bb"
+        )
+
+        self.tinggi = data.get(
+            "tinggi"
+        )
+
+
+        self.experience_level = data.get(
+            "experience_level"
+        )
+
+        self.injury_history = data.get(
+            "injury_history"
+        )
+
+
+        self.initial_dl = data.get(
+            "initial_dl",
+            0
+        )
+
+        self.initial_sq = data.get(
+            "initial_sq",
+            0
+        )
+
+        self.initial_bp = data.get(
+            "initial_bp",
+            0
+        )
+
+
+        self.tier = data.get(
+            "tier",
+            "free"
+        )
+
+
+        self.created_at = data.get(
+            "created_at"
+        )
+
+
 
     def set_password(self, raw_password):
-        self.password_hash = generate_password_hash(raw_password)
+
+        self.password_hash = generate_password_hash(
+            raw_password
+        )
+
+
 
     def check_password(self, raw_password):
-        return check_password_hash(self.password_hash, raw_password)
+
+        return check_password_hash(
+            self.password_hash,
+            raw_password
+        )
+
+
 
     def is_premium(self):
+
         return self.tier == "premium"
 
+
+
     def __repr__(self):
-        return f"<User {self.email} ({self.tier})>"
+
+        return (
+            f"<User "
+            f"{self.email} "
+            f"({self.tier})>"
+        )
