@@ -342,6 +342,69 @@ def add_item(plan_id):
 
 
 
+@exercise_bp.route("/edit-item/<int:item_id>", methods=["POST"])
+@login_required
+def edit_item(item_id):
+
+
+    item = _get_owned_item_or_404(
+        item_id
+    )
+
+
+    target_sets = request.form.get(
+        "target_sets",
+        type=int
+    ) or item["target_sets"]
+
+
+    target_reps = request.form.get(
+        "target_reps",
+        type=int
+    ) or item["target_reps"]
+
+
+    target_weight = request.form.get(
+        "target_weight",
+        type=float
+    )
+
+    if target_weight is None:
+        target_weight = item["target_weight"]
+
+
+
+    supabase.table(
+        "workout_plan_items"
+    ).update(
+        {
+            "target_sets": target_sets,
+            "target_reps": target_reps,
+            "target_weight": target_weight
+        }
+    ).eq(
+        "id",
+        item_id
+    ).execute()
+
+
+
+    flash(
+        f"{item['nama_gerakan']} diperbarui.",
+        "success"
+    )
+
+
+    return redirect(
+        url_for(
+            "exercise.index",
+            plan_id=item["plan_id"]
+        )
+    )
+
+
+
+
 @exercise_bp.route("/delete-item/<int:item_id>", methods=["POST"])
 @login_required
 def delete_item(item_id):
