@@ -1,10 +1,35 @@
-from supabase import create_client
 import os
+from supabase import create_client
+from dotenv import load_dotenv
 
 
-SUPABASE_URL = "https://eljxtoaeurxbdcisklcu.supabase.co"
+load_dotenv()
 
-SUPABASE_KEY = os.getenv("SUPABASE_KEY")
+
+class Config:
+
+    SECRET_KEY = os.getenv(
+        "SECRET_KEY",
+        "kuat-secret-key"
+    )
+
+    SQLALCHEMY_DATABASE_URI = os.getenv(
+        "DATABASE_URL"
+    )
+
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+
+
+SUPABASE_URL = os.getenv(
+    "SUPABASE_URL"
+)
+
+
+SUPABASE_KEY = os.getenv(
+    "SUPABASE_KEY"
+)
+
 
 
 supabase = create_client(
