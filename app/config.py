@@ -1,6 +1,6 @@
 import os
-from supabase import create_client
 from dotenv import load_dotenv
+from supabase import create_client
 
 
 load_dotenv()
@@ -10,8 +10,9 @@ class Config:
 
     SECRET_KEY = os.getenv(
         "SECRET_KEY",
-        "kuat-secret-key"
+        "dev-secret"
     )
+
 
     SQLALCHEMY_DATABASE_URI = os.getenv(
         "DATABASE_URL"
@@ -29,7 +30,6 @@ SUPABASE_URL = os.getenv(
 SUPABASE_KEY = os.getenv(
     "SUPABASE_KEY"
 )
-
 
 
 supabase = create_client(
