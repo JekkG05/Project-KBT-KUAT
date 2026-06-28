@@ -1,19 +1,20 @@
-import os
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from app.config import Config
 
-db = SQLAlchemy()
+def create_app():
 
-def create_app(config_class=Config):
-    app = Flask(__name__)
-    app.config.from_object(config_class)
-    
-    db.init_app(app)
-    
-    # Daftarkan blueprint atau routes Anda di bawah ini jika ada
-    # Contoh:
-    # from app.routes import main
-    # app.register_blueprint(main)
-    
+    app = Flask(
+        __name__,
+        template_folder="templates",
+        static_folder="static"
+    )
+
+    # config
+    app.config.from_object("app.config.Config")
+
+
+    # import routes/controller
+    from app.controllers import routes
+    app.register_blueprint(routes)
+
+
     return app
